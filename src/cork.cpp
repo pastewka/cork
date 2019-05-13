@@ -225,12 +225,55 @@ void computeIntersection(
     CorkTriMesh in0, CorkTriMesh in1, CorkTriMesh *out
 ) {
     CorkMesh cmIn0, cmIn1;
+    std::cout <<"Number of vertices of 0:" <<in0.n_vertices << std::endl;
+    for (int i = 0; i < in0.n_vertices; ++i) {
+      std::cout << i<< ":" << in0.vertices[3 * i + 0] << ","
+                << in0.vertices[3 * i + 1] << ","
+                << in0.vertices[3 * i + 2] <<std::endl;
+    }
+
+    std::cout <<"Number of vertices of 1:" <<in1.n_vertices << std::endl;
+    for (int i = 0; i < in1.n_vertices; ++i) {
+      std::cout << i<< ":" << in1.vertices[3 * i + 0] << ","
+                << in1.vertices[3 * i + 1] << ","
+                << in1.vertices[3 * i + 2] <<std::endl;
+    }
+
+    std::cout <<"Number of triangles of 0:" <<in0.n_triangles << std::endl;
+    for (int i = 0; i < in0.n_triangles; ++i) {
+      std::cout << i<< ":" << in0.triangles[3 * i + 0] << ","
+                << in0.triangles[3 * i + 1] << ","
+                << in0.triangles[3 * i + 2] <<std::endl;
+    }
+
+    std::cout <<"Number of triangles of 1:" <<in1.n_triangles << std::endl;
+    for (int i = 0; i < in1.n_triangles; ++i) {
+      std::cout << i<< ":" << in1.triangles[3 * i + 0] << ","
+                << in1.triangles[3 * i + 1] << ","
+                << in1.triangles[3 * i + 2] <<std::endl;
+    }
+
     corkTriMesh2CorkMesh(in0, &cmIn0);
     corkTriMesh2CorkMesh(in1, &cmIn1);
-    
+
+
+
     cmIn0.boolIsct(cmIn1);
-    
+
     corkMesh2CorkTriMesh(&cmIn0, out);
+    std::cout <<"Number of vertices of out:" <<out->n_vertices << std::endl;
+    for (int i = 0; i < out->n_vertices; ++i) {
+      std::cout << i<< ":" << out->vertices[3 * i + 0] << ","
+                << out->vertices[3 * i + 1] << ","
+                << out->vertices[3 * i + 2] <<std::endl;
+    }
+
+    std::cout <<"Number of triangles of out:" <<out->n_triangles << std::endl;
+    for (int i = 0; i < out->n_triangles; ++i) {
+      std::cout << i<< ":" << out->triangles[3 * i + 0] << ","
+                << out->triangles[3 * i + 1] << ","
+                << out->triangles[3 * i + 2] <<std::endl;
+    }
 }
 
 void computeSymmetricDifference(
