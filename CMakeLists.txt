@@ -40,3 +40,6 @@ add_subdirectory("${CMAKE_SOURCE_DIR}/src")
 
 add_executable(cork_exe "${CMAKE_SOURCE_DIR}/src/main.cpp")
 target_link_libraries(cork_exe PUBLIC corkpp)
+
+add_executable(cork_no "${CMAKE_SOURCE_DIR}/src/main_no.cpp")
+target_link_libraries(cork_no PUBLIC corkpp)
