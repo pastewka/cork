@@ -48,7 +48,7 @@ DLLEXPORT struct CorkTriMesh {
   std::vector<double> vertices;
 };
 
-DLLEXPORT enum ResultState {
+DLLEXPORT enum class ResultState {
   empty,     // when the result is empty (Intersection of two non intersecting
              // polyhedra)
   non_solid, // when teh result is "randomly" not true and represents a

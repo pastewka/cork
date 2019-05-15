@@ -467,16 +467,10 @@ void set_intersection_state(VolNormStateIntersection &intersection,
   } else {
     if (intersection.normal_vector.norm() == 0.0) {
       intersection.status = IntersectionState::completely_inside;
-    } else if (abs(intersection.volume-vol_precipitate)< tolerance){
-      intersection.status = IntersectionState::touching_inside;
-    }
+    } 
   }
 }
 /*-----------------------------------------------------------------------------*/
 
-// template<typename T>
-// std::ostream& operator<<(typename std::enable_if<std::is_enum<T>::value, std::ostream>::type& stream, const T& e)
-// {
-//     return stream << static_cast<typename std::underlying_type<T>::type>(e);
-// }
+
 //}  // namespace corkpp

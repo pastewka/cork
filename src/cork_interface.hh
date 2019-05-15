@@ -64,10 +64,9 @@ using std::stringstream;
 
   enum class IntersectionState {
     completely_inside = 1,
-    touching_inside = 2,
-    intersecting = 3,
-    enclosing = 4,
-    non_intersecting = 5
+    intersecting = 2,
+    enclosing = 3,
+    non_intersecting = 4
   };
 
   struct VolNormStateIntersection {
@@ -207,13 +206,6 @@ using std::stringstream;
 
     void set_intersection_state(VolNormStateIntersection &intersection,
                                 REAL volume_precipitate);
-    // template <typename T>
-    // std::ostream &
-    // operator<<(typename std::enable_if<std::is_enum<T>::value,
-    //                                    std::ostream>::type &stream,
-    //            const T &e);
-    // std::ostream &operator<<(std::ostream &out, const IntersectionState
-    // value);
 
     // }  // namespace corkpp
 
