@@ -37,7 +37,7 @@
 
 #include "triangle.hh"
 
-// namespace corkpp{
+namespace corkpp {
 struct GenericVertType;
 struct IsctVertType;
 struct OrigVertType;
@@ -427,7 +427,7 @@ public:
     // out.edgemarkerlist = null; // only necessary if -e is used
 
     // solve the triangulation problem
-    char *params = (char*)("pzQYY");
+    char *params = (char *)("pzQYY");
     // char *debug_params = (char *)("pzYYVC");
     triangulate(params, &in, &out, nullptr);
 
@@ -1412,4 +1412,4 @@ bool Mesh<VertData, TriData>::isSelfIntersecting() {
   return iproblem.hasIntersections();
 }
 
-// } // namespace corkpp
+} // namespace corkpp

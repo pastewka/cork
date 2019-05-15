@@ -167,7 +167,7 @@ vector_t average_normal_calculator(const CorkTriMesh &in) {
   total_face_normal_time_area = total_face_normal_time_area / total_area;
 
   for (int i = 0; i < total_face_normal_time_area.size(); ++i) {
-    if (abs(total_face_normal_time_area[i]) < tolerance) {
+    if (std::abs(total_face_normal_time_area[i]) < tolerance) {
       total_face_normal_time_area[i] = 0.0;
     }
   }

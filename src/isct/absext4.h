@@ -40,7 +40,7 @@
 #include "ext4.h"
 
 #include <cmath>
- 
+namespace corkpp{
 namespace AbsExt4 {
 
 using namespace Ext4;
@@ -239,4 +239,4 @@ inline double inner(const AbsExt4_3 &lhs, const AbsExt4_3 &rhs) {
 
 } // end namespace AbsExt4
 
-
+} //namespace corkpp

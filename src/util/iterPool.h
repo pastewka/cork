@@ -1,12 +1,12 @@
 // +-------------------------------------------------------------------------
 // | iterPool.h
-// | 
+// |
 // | Author: Gilbert Bernstein
 // +-------------------------------------------------------------------------
 // | COPYRIGHT:
 // |    Copyright Gilbert Bernstein 2013
 // |    See the included COPYRIGHT file for further details.
-// |    
+// |
 // |    This file is part of the Cork library.
 // |
 // |    Cork is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 // |    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // |    GNU Lesser General Public License for more details.
 // |
-// |    You should have received a copy 
+// |    You should have received a copy
 // |    of the GNU Lesser General Public License
 // |    along with Cork.  If not, see <http://www.gnu.org/licenses/>.
 // +-------------------------------------------------------------------------
@@ -28,7 +28,7 @@
 #include "prelude.h"
 // +-------------------------------------------------------------------------
 // | WHAT IS THIS?
-// | 
+// |
 // | An IterPool is
 // |    *)  a memory pool -- new items can be requested, old items released
 // |    *)  iterable -- all of the allocated items can be iterated over
@@ -51,149 +51,124 @@
 #include "memPool.h"
 #include <utility>
 
-template<class T>
-class IterPool
-{
+namespace corkpp {
+template <class T> class IterPool {
 private:
-    uint numAlloced;
+  uint numAlloced;
+
 public:
-    IterPool(int minInitBlocks=10) :
-        numAlloced(0),
-        block_list(nullptr),
-        pool(minInitBlocks)
-    {}
-    IterPool(IterPool &&src)
-        : numAlloced(src.numAlloced),
-          block_list(src.block_list),
-          pool(std::move(src.pool))
-    {
-        src.block_list = nullptr;
-    }
-    ~IterPool() {
-        // run through and destruct all remaining elements
-        for_each([](T* obj) {
-            obj->~T();
-        });
-    }
-    
-    void clear() {
-        for_each([](T* obj) {
-            obj->~T();
-        });
-        numAlloced = 0;
-        block_list = nullptr;
-        pool.clear();
-    }
-    
-    void operator=(IterPool &&src)
-    {
-        for_each([](T* obj) {
-            obj->~T();
-        });
-        block_list = src.block_list;
-        src.block_list = nullptr;
-        pool = std::move(src.pool);
-    }
-    
-    
+  IterPool(int minInitBlocks = 10)
+      : numAlloced(0), block_list(nullptr), pool(minInitBlocks) {}
+  IterPool(IterPool &&src)
+      : numAlloced(src.numAlloced), block_list(src.block_list),
+        pool(std::move(src.pool)) {
+    src.block_list = nullptr;
+  }
+  ~IterPool() {
+    // run through and destruct all remaining elements
+    for_each([](T *obj) { obj->~T(); });
+  }
+
+  void clear() {
+    for_each([](T *obj) { obj->~T(); });
+    numAlloced = 0;
+    block_list = nullptr;
+    pool.clear();
+  }
+
+  void operator=(IterPool &&src) {
+    for_each([](T *obj) { obj->~T(); });
+    block_list = src.block_list;
+    src.block_list = nullptr;
+    pool = std::move(src.pool);
+  }
+
 private:
-    struct Block {
-        T       datum;
-        Block   *next;
-        Block   *prev;
-    };
-    Block *block_list;
-    
+  struct Block {
+    T datum;
+    Block *next;
+    Block *prev;
+  };
+  Block *block_list;
+
 public: // allocation/deallocation support
-    T* alloc() {
-        Block *new_block = pool.alloc();
-        if(block_list) block_list->prev = new_block;
-        new_block->next = block_list;
-        new_block->prev = NULL;
-        block_list = new_block;
-        
-        T* obj = (T*)new_block;
-        new (obj) T(); // invoke default constructor when allocating
-        
-        numAlloced++;
-        
-        return obj;
-    }
-    void free(T* item) {
-        if(item == NULL)   return;
-        item->~T(); // invoke destructor before releasing
-        
-        numAlloced--;
-        
-        Block *ptr = (Block*)(item);
-        if(ptr->next)   ptr->next->prev = ptr->prev;
-        if(ptr->prev)   ptr->prev->next = ptr->next;
-        if(ptr == block_list)   block_list = ptr->next;
-        pool.free(ptr);
-    }
-    
+  T *alloc() {
+    Block *new_block = pool.alloc();
+    if (block_list)
+      block_list->prev = new_block;
+    new_block->next = block_list;
+    new_block->prev = NULL;
+    block_list = new_block;
+
+    T *obj = (T *)new_block;
+    new (obj) T(); // invoke default constructor when allocating
+
+    numAlloced++;
+
+    return obj;
+  }
+  void free(T *item) {
+    if (item == NULL)
+      return;
+    item->~T(); // invoke destructor before releasing
+
+    numAlloced--;
+
+    Block *ptr = (Block *)(item);
+    if (ptr->next)
+      ptr->next->prev = ptr->prev;
+    if (ptr->prev)
+      ptr->prev->next = ptr->next;
+    if (ptr == block_list)
+      block_list = ptr->next;
+    pool.free(ptr);
+  }
+
 public:
-    inline void for_each(std::function<void(T*)> func) const {
-        for(Block *block = block_list;
-          block != NULL;
-          block = block->next) {
-            func((T*)(block));
-        }
+  inline void for_each(std::function<void(T *)> func) const {
+    for (Block *block = block_list; block != NULL; block = block->next) {
+      func((T *)(block));
     }
-    inline bool contains(T* tptr) const {
-        for(Block *block = block_list;
-          block != NULL;
-          block = block->next) {
-            if(tptr == (T*)(block))
-                return true;
-        }
-        return false;
+  }
+  inline bool contains(T *tptr) const {
+    for (Block *block = block_list; block != NULL; block = block->next) {
+      if (tptr == (T *)(block))
+        return true;
     }
-    inline uint size() const {
-        return numAlloced;
-    }
+    return false;
+  }
+  inline uint size() const { return numAlloced; }
+
 public: // iteration support
-    class iterator {
-    public:
-        iterator() : ptr(NULL) {}
-        iterator(Block *init) : ptr(init) {}
-        iterator(const iterator &cp) : ptr(cp.ptr) {}
-        
-        iterator& operator++() { // prefix version
-            ptr = ptr->next;
-            return *this;
-        }
-        iterator operator++(int) {
-            iterator it(ptr);
-            ptr = ptr->next;
-            return it;
-        } // postfix version
-        T& operator*() {
-            return ptr->datum;
-        }
-        T* operator->() {
-            return (T*)(ptr);
-        }
-        bool operator==(const iterator &rhs) {
-            return ptr == rhs.ptr;
-        }
-        bool operator!=(const iterator &rhs) {
-            return ptr != rhs.ptr;
-        }
-    private:
-        Block *ptr;
-    };
-    
-    iterator begin() {
-        return iterator(block_list);
+  class iterator {
+  public:
+    iterator() : ptr(NULL) {}
+    iterator(Block *init) : ptr(init) {}
+    iterator(const iterator &cp) : ptr(cp.ptr) {}
+
+    iterator &operator++() { // prefix version
+      ptr = ptr->next;
+      return *this;
     }
-    iterator end() {
-        return iterator(NULL);
-    }
-    
+    iterator operator++(int) {
+      iterator it(ptr);
+      ptr = ptr->next;
+      return it;
+    } // postfix version
+    T &operator*() { return ptr->datum; }
+    T *operator->() { return (T *)(ptr); }
+    bool operator==(const iterator &rhs) { return ptr == rhs.ptr; }
+    bool operator!=(const iterator &rhs) { return ptr != rhs.ptr; }
+
+  private:
+    Block *ptr;
+  };
+
+  iterator begin() { return iterator(block_list); }
+  iterator end() { return iterator(NULL); }
+
 private:
-    MemPool<Block> pool;
+  MemPool<Block> pool;
 };
 
-
-
+} // namespace corkpp

@@ -31,7 +31,7 @@ using std::ifstream;
 using std::ofstream;
 using std::endl;
 
-
+namespace corkpp{
 namespace Files {
 
 using std::string;
@@ -111,3 +111,4 @@ int writeOFF(string filename, FileMesh *data)
 
 
 } // end namespace Files
+} // namespace coekpp

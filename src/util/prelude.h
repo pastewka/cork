@@ -31,6 +31,7 @@
 #include <ctime>
 #include <iostream>
 
+namespace corkpp {
 #ifndef uint
 typedef unsigned int uint;
 #endif
@@ -162,3 +163,4 @@ inline double drand(double min, double max) {
 }
 
 inline uint randMod(uint range) { return std::rand() % range; }
+} // namespace corkpp
