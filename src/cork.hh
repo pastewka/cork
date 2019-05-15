@@ -27,7 +27,7 @@
 
 #include <vector>
 
-// namespace corkpp {
+namespace corkpp {
 #ifdef WIN32
 #define DLLEXPORT __declspec(dllexport)
 #else
@@ -96,4 +96,4 @@ DLLEXPORT void resolveIntersections(const CorkTriMesh &in0,
 
 
 
-//}  // namespace corkpp
+}  // namespace corkpp

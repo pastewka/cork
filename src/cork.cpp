@@ -28,7 +28,7 @@
 
 #include "mesh.h"
 
-// namespace corkpp {
+namespace corkpp {
 
 struct CorkTriangle;
 
@@ -253,4 +253,4 @@ void resolveIntersections(const CorkTriMesh &in0, const CorkTriMesh &in1,
 
   corkMesh2CorkTriMesh(cmIn0, out);
 }
-//}  // namespace corkpp
+} // namespace corkpp

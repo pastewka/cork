@@ -45,17 +45,17 @@ using std::ostream;
 
 
 int main(int argc, char *argv[]) {
-  CorkTriMesh pixel;
-  CorkTriMesh precipitate140;
-  CorkTriMesh intersection140;
+  corkpp::CorkTriMesh pixel;
+  corkpp::CorkTriMesh precipitate140;
+  corkpp::CorkTriMesh intersection140;
 
-  loadMesh("toolbox_graph/precipitate140.off", precipitate140);
-  loadMesh("toolbox_graph/pixel.off", pixel);
+  corkpp::loadMesh("toolbox_graph/precipitate140.off", precipitate140);
+  corkpp::loadMesh("toolbox_graph/pixel.off", pixel);
 
-  compute_intersection(precipitate140, pixel, intersection140);
-  auto && vol = volume_calculator(intersection140);
+  corkpp::compute_intersection(precipitate140, pixel, intersection140);
+  auto && vol = corkpp::volume_calculator(intersection140);
   std::cout<< vol <<std::endl;
-  saveMesh("toolbox_graph/intersection140.off", intersection140);
+  corkpp::saveMesh("toolbox_graph/intersection140.off", intersection140);
 
   return 0;
 }

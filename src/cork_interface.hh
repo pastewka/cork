@@ -45,7 +45,7 @@ using std::stringstream;
 #include "file_formats/files.h"
 
 
-//namespace corkpp {
+namespace corkpp {
   using face_t = std::array<uint, 3>;
   using point_t = std::array<double, 3>;
   using vector_t = Eigen::Vector3d;
@@ -207,6 +207,6 @@ using std::stringstream;
     void set_intersection_state(VolNormStateIntersection &intersection,
                                 REAL volume_precipitate);
 
-    // }  // namespace corkpp
+    }  // namespace corkpp
 
 #endif /* CORK_INTERFACE_H */

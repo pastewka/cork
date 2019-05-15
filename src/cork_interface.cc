@@ -1,6 +1,6 @@
 #include "cork_interface.hh"
 
-// namespace corkpp {
+namespace corkpp {
 
 void file2corktrimesh(const Files::FileMesh &in, CorkTriMesh &out) {
   out.n_vertices = in.vertices.size();
@@ -467,10 +467,10 @@ void set_intersection_state(VolNormStateIntersection &intersection,
   } else {
     if (intersection.normal_vector.norm() == 0.0) {
       intersection.status = IntersectionState::completely_inside;
-    } 
+    }
   }
 }
 /*-----------------------------------------------------------------------------*/
 
 
-//}  // namespace corkpp
+}  // namespace corkpp
