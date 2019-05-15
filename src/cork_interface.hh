@@ -62,12 +62,12 @@ using std::stringstream;
   void loadMesh(string filename, CorkTriMesh & out);
   void saveMesh(string filename, CorkTriMesh in);
 
-  class enum IntersectionState {
-    completely_inside,
-    touching_inside,
-    intersecting,
-    enclosing,
-    non_intersecting
+  enum class IntersectionState {
+    completely_inside = 1,
+    touching_inside = 2,
+    intersecting = 3,
+    enclosing = 4,
+    non_intersecting = 5
   };
 
   struct VolNormStateIntersection {
@@ -75,7 +75,7 @@ using std::stringstream;
     REAL volume{0.0};
     REAL volume_ratio{0.0};
     IntersectionState status{IntersectionState::intersecting};
-};
+  };
 
   /**
    * This function recieves to set of vertices "vertices_pre" &
@@ -207,10 +207,14 @@ using std::stringstream;
 
     void set_intersection_state(VolNormStateIntersection &intersection,
                                 REAL volume_precipitate);
-
-    std::ostream &operator<<(std::ostream &out, const IntersectionState value);
+    // template <typename T>
+    // std::ostream &
+    // operator<<(typename std::enable_if<std::is_enum<T>::value,
+    //                                    std::ostream>::type &stream,
+    //            const T &e);
+    // std::ostream &operator<<(std::ostream &out, const IntersectionState
+    // value);
 
     // }  // namespace corkpp
 
 #endif /* CORK_INTERFACE_H */
-

@@ -54,7 +54,7 @@ int main(int argc, char * argv[]) {
   std::cout <<"verctor:" << std::endl<< vol_norm.normal_vector << std::endl;
   std::cout <<"vol: " <<vol << std::endl;
   std::cout <<"vol_ratio: " <<vol_norm.volume_ratio << std::endl;
-  std::cout << "status:" << vol_norm.status << std::endl;
+  std::cout << "status:" << static_cast<int>(vol_norm.status) << std::endl;
   // auto && normal average
 
   return 0;

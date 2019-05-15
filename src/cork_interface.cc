@@ -474,21 +474,9 @@ void set_intersection_state(VolNormStateIntersection &intersection,
 }
 /*-----------------------------------------------------------------------------*/
 
-std::ostream &operator<<(std::ostream &out, const IntersectionState value) {
-  const char *s = 0;
-#define PROCESS_VAL(p)                                                         \
-  case (p):                                                                    \
-    s = #p;                                                                    \
-    break;
-  switch (value) {
-    PROCESS_VAL(completely_inside);
-    PROCESS_VAL(touching_inside);
-    PROCESS_VAL(intersecting);
-    PROCESS_VAL(enclosing);
-    PROCESS_VAL(non_intersecting);
-  }
-#undef PROCESS_VAL
-
-  return out << s;
-}
+// template<typename T>
+// std::ostream& operator<<(typename std::enable_if<std::is_enum<T>::value, std::ostream>::type& stream, const T& e)
+// {
+//     return stream << static_cast<typename std::underlying_type<T>::type>(e);
+// }
 //}  // namespace corkpp
