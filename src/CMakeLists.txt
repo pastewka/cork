@@ -1,16 +1,4 @@
 
-include_directories(
-  "${CMAKE_SOURCE_DIR}"
-  "${CMAKE_SOURCE_DIR}/accel"
-  "${CMAKE_SOURCE_DIR}/file_formats"
-  "${CMAKE_SOURCE_DIR}/isct"
-  "${CMAKE_SOURCE_DIR}/math"
-  "${CMAKE_SOURCE_DIR}/mpz"
-  "${CMAKE_SOURCE_DIR}/mesh"
-  "${CMAKE_SOURCE_DIR}/rawmesh"
-  "${CMAKE_SOURCE_DIR}/util"
-  "${CMAKE_SOURCE_DIR}/tetgen")
-
 add_subdirectory("./tetgen")
 
 
