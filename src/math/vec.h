@@ -29,7 +29,7 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "prelude.h"
+#include "../util/prelude.h"
 
 // **************************************************************************
 // *  Vec2 stores 2-dimensional vectors using whatever base type you choose
