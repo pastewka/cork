@@ -40,82 +40,22 @@ using std::stringstream;
 
 using std::ostream;
 
-#include "cork.h"
+#include "cork.hh"
+#include "cork_interface.hh"
 
-void file2corktrimesh(const Files::FileMesh &in, CorkTriMesh *out) {
-  out->n_vertices = in.vertices.size();
-  out->n_triangles = in.triangles.size();
-
-  out->triangles = new uint[(out->n_triangles) * 3];
-  out->vertices = new float[(out->n_vertices) * 3];
-
-  for (uint i = 0; i < out->n_triangles; i++) {
-    (out->triangles)[3 * i + 0] = in.triangles[i].a;
-    (out->triangles)[3 * i + 1] = in.triangles[i].b;
-    (out->triangles)[3 * i + 2] = in.triangles[i].c;
-  }
-
-  for (uint i = 0; i < out->n_vertices; i++) {
-    (out->vertices)[3 * i + 0] = in.vertices[i].pos.x;
-    (out->vertices)[3 * i + 1] = in.vertices[i].pos.y;
-    (out->vertices)[3 * i + 2] = in.vertices[i].pos.z;
-  }
-}
-
-void corktrimesh2file(CorkTriMesh in, Files::FileMesh &out) {
-  out.vertices.resize(in.n_vertices);
-  out.triangles.resize(in.n_triangles);
-
-  for (uint i = 0; i < in.n_triangles; i++) {
-    out.triangles[i].a = in.triangles[3 * i + 0];
-    out.triangles[i].b = in.triangles[3 * i + 1];
-    out.triangles[i].c = in.triangles[3 * i + 2];
-  }
-
-  for (uint i = 0; i < in.n_vertices; i++) {
-    out.vertices[i].pos.x = in.vertices[3 * i + 0];
-    out.vertices[i].pos.y = in.vertices[3 * i + 1];
-    out.vertices[i].pos.z = in.vertices[3 * i + 2];
-  }
-}
-
-void loadMesh(string filename, CorkTriMesh *out) {
-  Files::FileMesh filemesh;
-
-  if (Files::readTriMesh(filename, &filemesh) > 0) {
-    cerr << "Unable to load in " << filename << endl;
-    exit(1);
-  }
-
-  file2corktrimesh(filemesh, out);
-}
-void saveMesh(string filename, CorkTriMesh in) {
-  Files::FileMesh filemesh;
-
-  corktrimesh2file(in, filemesh);
-
-  if (Files::writeTriMesh(filename, &filemesh) > 0) {
-    cerr << "Unable to write to " << filename << endl;
-    exit(1);
-  }
-}
 
 int main(int argc, char *argv[]) {
   CorkTriMesh pixel;
   CorkTriMesh precipitate140;
   CorkTriMesh intersection140;
 
-  loadMesh("toolbox_graph/precipitate140.off", &precipitate140);
-  loadMesh("toolbox_graph/pixel.off", &pixel);
+  loadMesh("toolbox_graph/precipitate140.off", precipitate140);
+  loadMesh("toolbox_graph/pixel.off", pixel);
 
-  computeIntersection(precipitate140, pixel, &intersection140);
-
+  compute_intersection(precipitate140, pixel, intersection140);
+  auto && vol = volume_calculator(intersection140);
+  std::cout<< vol <<std::endl;
   saveMesh("toolbox_graph/intersection140.off", intersection140);
 
-  delete[] pixel.vertices;
-  delete[] pixel.triangles;
-  delete[] precipitate140.vertices;
-  delete[] precipitate140.triangles;
-  freeCorkTriMesh(&intersection140);
   return 0;
 }

@@ -11,7 +11,7 @@ include_directories(
   "${CMAKE_SOURCE_DIR}/util"
   "${CMAKE_SOURCE_DIR}/tetgen")
 
-# add_subdirectory("./tetgen")
+add_subdirectory("./tetgen")
 
 
 file(
@@ -74,7 +74,7 @@ add_library(corkpp STATIC ${cork_SRC})
 
 #link tetgen 
 target_link_libraries(corkpp PUBLIC gmp)
-# target_link_libraries(corkpp PUBLIC tetgen)
+target_link_libraries(corkpp PUBLIC tetgen)
 
 #install public facing headers and lib
 # install (TARGETS cork64 DESTINATION ${PROJECT_SOURCE_DIR}/lib)

@@ -627,47 +627,41 @@ bool emptyExact(const TriTriTriIn &input)
         return filter > 0;
 }
 
-Vec3d coordsExact(const TriTriTriIn &input)
-{
-    // How many bits do we need for various intermediary values?
-    // Here we label the amount with the relevant type (i.e. EXT2)
-    // and the relevant role
-    //const static int EXT2_UP_BITS = 2*IN_BITS + 1;
-    //const static int EXT3_UP_BITS = EXT2_UP_BITS + IN_BITS + 2;
-    //const static int EXT2_DN_BITS = 2*EXT3_UP_BITS + 1;
-    //const static int ISCT_BITS    = EXT2_DN_BITS + EXT3_UP_BITS + 2;
-    //const static int EXT2_TA_BITS = ISCT_BITS + IN_BITS + 1;
-    //const static int EXT3_TA_BITS = EXT2_TA_BITS + IN_BITS + 2;
-    //const static int INNER_BITS   = EXT3_TA_BITS + EXT3_UP_BITS + 2;
-    
-    GmpExt4_1                           p[3][3];
-    GmpExt4_3                           t[3];
-    for(uint i=0; i<3; i++) {
-        for(uint j=0; j<3; j++) {
-            toGmpExt(p[i][j], input.tri[i].p[j]);
-        }
-        GmpExt4_2                       temp;
-        join(temp, p[i][0], p[i][1]);
-        join(t[i], temp,    p[i][2]);
+Vec3d coordsExact(const TriTriTriIn &input) {
+  // How many bits do we need for various intermediary values?
+  // Here we label the amount with the relevant type (i.e. EXT2)
+  // and the relevant role
+  // const static int EXT2_UP_BITS = 2*IN_BITS + 1;
+  // const static int EXT3_UP_BITS = EXT2_UP_BITS + IN_BITS + 2;
+  // const static int EXT2_DN_BITS = 2*EXT3_UP_BITS + 1;
+  // const static int ISCT_BITS    = EXT2_DN_BITS + EXT3_UP_BITS + 2;
+  // const static int EXT2_TA_BITS = ISCT_BITS + IN_BITS + 1;
+  // const static int EXT3_TA_BITS = EXT2_TA_BITS + IN_BITS + 2;
+  // const static int INNER_BITS   = EXT3_TA_BITS + EXT3_UP_BITS + 2;
+
+  GmpExt4_1 p[3][3];
+  GmpExt4_3 t[3];
+  for (uint i = 0; i < 3; i++) {
+    for (uint j = 0; j < 3; j++) {
+      toGmpExt(p[i][j], input.tri[i].p[j]);
     }
-    
-    // compute the point of intersection
-    GmpExt4_1                           pisct;
-    {
-        GmpExt4_2                       temp;
-        meet(temp,  t[0], t[1]);
-        meet(pisct, temp, t[2]);
-    }
-    
-    // convert to double
-    Vec3d result;
-    toVec3d(result, pisct);
-    return result;
+    GmpExt4_2 temp;
+    join(temp, p[i][0], p[i][1]);
+    join(t[i], temp, p[i][2]);
+  }
+
+  // compute the point of intersection
+  GmpExt4_1 pisct;
+  {
+    GmpExt4_2 temp;
+    meet(temp, t[0], t[1]);
+    meet(pisct, temp, t[2]);
+  }
+
+  // convert to double
+  Vec3d result;
+  toVec3d(result, pisct);
+  return result;
 }
 
-
-
 } // end namespace Empty3d
-
-
-

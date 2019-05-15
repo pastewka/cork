@@ -247,6 +247,11 @@
 /*  not used, `numberofsegments' will indicate the number of boundary edges. */
 /*                                                                           */
 /*****************************************************************************/
+#ifndef TRIANGLE_H
+#define TRIANGLE_H
+
+
+
 
 #include <inttypes.h>
 #include <vector>
@@ -295,3 +300,4 @@
   void trifree();*/
   /*#endif*/ /* not ANSI_DECLARATORS */
 // }  // namespace corkpp
+#endif /* TRIANGLE_H */

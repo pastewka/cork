@@ -1,12 +1,12 @@
 // +-------------------------------------------------------------------------
 // | cork.h
-// | 
+// |
 // | Author: Gilbert Bernstein
 // +-------------------------------------------------------------------------
 // | COPYRIGHT:
 // |    Copyright Gilbert Bernstein 2013
 // |    See the included COPYRIGHT file for further details.
-// |    
+// |
 // |    This file is part of the Cork library.
 // |
 // |    Cork is free software: you can redistribute it and/or modify
@@ -19,11 +19,20 @@
 // |    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // |    GNU Lesser General Public License for more details.
 // |
-// |    You should have received a copy 
+// |    You should have received a copy
 // |    of the GNU Lesser General Public License
 // |    along with Cork.  If not, see <http://www.gnu.org/licenses/>.
 // +-------------------------------------------------------------------------
 #pragma once
+
+#include <vector>
+
+// namespace corkpp {
+#ifdef WIN32
+#define DLLEXPORT __declspec(dllexport)
+#else
+#define DLLEXPORT
+#endif
 
 #ifndef uint
 typedef unsigned int uint;
@@ -32,15 +41,22 @@ typedef unsigned int uint;
 // if a mesh is taken as input, the client must manage the memory
 // if a mesh is given as output, please use the provided
 // function to free the allocated memory.
-struct CorkTriMesh
-{
-    uint    n_triangles;
-    uint    n_vertices;
-    uint    *triangles;
-    float   *vertices;
+DLLEXPORT struct CorkTriMesh {
+  uint n_triangles{0};
+  uint n_vertices{0};
+  std::vector<uint> triangles;
+  std::vector<double> vertices;
 };
 
-void freeCorkTriMesh(CorkTriMesh *mesh);
+DLLEXPORT enum ResultState {
+  empty,     // when the result is empty (Intersection of two non intersecting
+             // polyhedra)
+  non_solid, // when teh result is "randomly" not true and represents a
+             // non-solid shape
+  solid      // solid existing result od a boolean operation
+};
+
+DLLEXPORT void freeCorkTriMesh(CorkTriMesh *mesh);
 
 // the inputs to Boolean operations must be "solid":
 //  -   closed (aka. watertight; see comment at bottom)
@@ -50,25 +66,34 @@ void freeCorkTriMesh(CorkTriMesh *mesh);
 // orientation, the object is interpreted as its unbounded complement
 
 // This function will test whether or not a mesh is solid
-bool isSolid(CorkTriMesh mesh);
-
+DLLEXPORT bool isSolid(const CorkTriMesh &mesh);
+DLLEXPORT ResultState checkState(const CorkTriMesh &cmesh);
 // Boolean operations follow
 // result = A U B
-void computeUnion(CorkTriMesh in0, CorkTriMesh in1, CorkTriMesh *out);
+DLLEXPORT void computeUnion(const CorkTriMesh &in0, const CorkTriMesh &in1,
+                            CorkTriMesh &out);
 
 // result = A - B
-void computeDifference(CorkTriMesh in0, CorkTriMesh in1, CorkTriMesh *out);
+DLLEXPORT void computeDifference(const CorkTriMesh &in0, const CorkTriMesh &in1,
+                                 CorkTriMesh &out);
 
 // result = A ^ B
-void computeIntersection(CorkTriMesh in0, CorkTriMesh in1, CorkTriMesh *out);
+DLLEXPORT void computeIntersection(const CorkTriMesh &in0,
+                                   const CorkTriMesh &in1, CorkTriMesh &out);
 
 // result = A XOR B
-void computeSymmetricDifference(
-                        CorkTriMesh in0, CorkTriMesh in1, CorkTriMesh *out);
+DLLEXPORT void computeSymmetricDifference(const CorkTriMesh &in0,
+                                          const CorkTriMesh &in1,
+                                          CorkTriMesh &out);
 
 // Not a Boolean operation, but related:
 //  No portion of either surface is deleted.  However, the
 //  curve of intersection between the two surfaces is made explicit,
 //  such that the two surfaces are now connected.
-void resolveIntersections(CorkTriMesh in0, CorkTriMesh in1, CorkTriMesh *out);
+DLLEXPORT void resolveIntersections(const CorkTriMesh &in0,
+                                    const CorkTriMesh &in1, CorkTriMesh &out);
 
+
+
+
+//}  // namespace corkpp
