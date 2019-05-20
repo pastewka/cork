@@ -77,26 +77,19 @@ auto calculate_intersection_volume_normal(
   corktrimesh_maker_from_node_faces(vertices_precipitate, faces_precipitate,
                                     precipitate);
   corktrimesh_maker_from_node_faces(vertices_pixel, faces_pixel, pixel);
-  saveMesh("toolbox_graph/precipitate.off", precipitate);
-  saveMesh("toolbox_graph/pixel.off", pixel);
 
   compute_intersection(precipitate, pixel, intersection);
 
   ret_structure.volume = volume_calculator(intersection);
   ret_structure.volume_ratio = ret_structure.volume / volume_calculator(pixel);
-  saveMesh("toolbox_graph/intersection.off", intersection);
+
   // computeDifference(pixel, precipitate, difference);
   // intersect_of_faces(intersection, difference,
   // intersection_and_difference);
   diff_of_faces(intersection, pixel, intersection_and_difference);
-  saveMesh("toolbox_graph/difference.off", difference);
-
-  saveMesh("toolbox_graph/difference_intersection.off",
-           intersection_and_difference);
-
   ret_structure.normal_vector =
       average_normal_calculator(intersection_and_difference);
-  auto && vol_precipitate = volume_calculator(precipitate);
+  auto &&vol_precipitate = volume_calculator(precipitate);
   set_intersection_state(ret_structure, vol_precipitate);
   return ret_structure;
 }
@@ -472,5 +465,4 @@ void set_intersection_state(VolNormStateIntersection &intersection,
 }
 /*-----------------------------------------------------------------------------*/
 
-
-}  // namespace corkpp
+} // namespace corkpp
