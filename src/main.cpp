@@ -45,14 +45,15 @@ int main(int argc, char * argv[]) {
    corkpp::point_t size_pixel{1.0, 1.0, 0.20};
   vertices_pixel =  corkpp::cube_vertice_maker(origin_pixel, size_pixel);
 
-  auto && vol_norm =  corkpp::calculate_intersection_volume_normal(
+  auto && vol_norm =  corkpp::calculate_intersection_volume_normal_state(
       vertices_precipitate, vertices_pixel);
 
-  auto && vol =  corkpp::calculate_intersection_volume(vertices_precipitate,
+  auto && vol_state =  corkpp::calculate_intersection_volume_state(vertices_precipitate,
                                                       vertices_pixel);
+  
 
   std::cout <<"verctor:" << std::endl<< vol_norm.normal_vector << std::endl;
-  std::cout <<"vol: " <<vol << std::endl;
+  std::cout <<"vol: " <<vol_state.volume << std::endl;
   std::cout <<"vol_ratio: " <<vol_norm.volume_ratio << std::endl;
   std::cout << "status:" << static_cast<int>(vol_norm.status) << std::endl;
   // auto && normal average

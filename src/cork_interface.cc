@@ -62,7 +62,7 @@ void saveMesh(string filename, CorkTriMesh in) {
 
 /*-----------------------------------------------------------------------------*/
 
-auto calculate_intersection_volume_normal(
+auto calculate_intersection_volume_normal_state(
     const std::vector<point_t> vertices_precipitate,
     const std::vector<point_t> vertices_pixel) -> VolNormStateIntersection {
   std::vector<face_t> faces_precipitate, faces_pixel;
@@ -91,6 +91,41 @@ auto calculate_intersection_volume_normal(
       average_normal_calculator(intersection_and_difference);
   auto &&vol_precipitate = volume_calculator(precipitate);
   set_intersection_state(ret_structure, vol_precipitate);
+  return ret_structure;
+}
+
+
+
+/*-----------------------------------------------------------------------------*/
+
+  auto calculate_intersection_volume_state(
+    const std::vector<point_t> vertices_precipitate,
+    const std::vector<point_t> vertices_pixel) -> VolStateIntersection {
+  std::vector<face_t> faces_precipitate, faces_pixel;
+  VolNormStateIntersection complete_structure;
+  VolStateIntersection ret_structure;
+  make_faces_from_nodes(vertices_precipitate, faces_precipitate);
+  make_faces_from_nodes(vertices_pixel, faces_pixel);
+  CorkTriMesh precipitate;
+  CorkTriMesh pixel;
+  CorkTriMesh intersection;
+  CorkTriMesh difference;
+  CorkTriMesh intersection_and_difference;
+  corktrimesh_maker_from_node_faces(vertices_precipitate, faces_precipitate,
+                                    precipitate);
+  corktrimesh_maker_from_node_faces(vertices_pixel, faces_pixel, pixel);
+
+  compute_intersection(precipitate, pixel, intersection);
+
+  ret_structure.volume = volume_calculator(intersection);
+  ret_structure.volume_ratio = ret_structure.volume / volume_calculator(pixel);
+
+  // computeDifference(pixel, precipitate, difference);
+  // intersect_of_faces(intersection, difference,
+  // intersection_and_difference);
+  diff_of_faces(intersection, pixel, intersection_and_difference);
+  auto &&vol_precipitate = volume_calculator(precipitate);
+  set_intersection_state(complete_structure, vol_precipitate);
   return ret_structure;
 }
 
