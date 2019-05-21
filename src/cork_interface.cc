@@ -126,6 +126,7 @@ auto calculate_intersection_volume_normal_state(
   diff_of_faces(intersection, pixel, intersection_and_difference);
   auto &&vol_precipitate = volume_calculator(precipitate);
   set_intersection_state(complete_structure, vol_precipitate);
+  ret_structure.status = complete_structure.status;
   return ret_structure;
 }
 

@@ -27,12 +27,12 @@
 #include "cork.hh"
 #include "cork_interface.hh"
 
-int main(int argc, char * argv[]) {
-  std::vector< corkpp::point_t> vertices_precipitate;
-   corkpp::point_t origin_precipitate{-0.50, -0.50, -0.50};
-   corkpp::point_t size_precipitate{2.0, 2.30, 2.00};
+int main(int argc, char *argv[]) {
+  std::vector<corkpp::point_t> vertices_precipitate;
+  corkpp::point_t origin_precipitate{-0.50, -0.50, -0.50};
+  corkpp::point_t size_precipitate{2.0, 2.30, 2.00};
   vertices_precipitate =
-       corkpp::cube_vertice_maker(origin_precipitate, size_precipitate);
+      corkpp::cube_vertice_maker(origin_precipitate, size_precipitate);
 
   vertices_precipitate.push_back({0.05, 0.05, 0.05});
   vertices_precipitate.push_back({0.50, 0.05, 0.05});
@@ -40,21 +40,20 @@ int main(int argc, char * argv[]) {
   vertices_precipitate.push_back({0.05, 0.05, 0.50});
   vertices_precipitate.push_back({0.50, 0.50, 0.50});
 
-  std::vector< corkpp::point_t> vertices_pixel;
-   corkpp::point_t origin_pixel{0.0, 0.0, 0.0};
-   corkpp::point_t size_pixel{1.0, 1.0, 0.20};
-  vertices_pixel =  corkpp::cube_vertice_maker(origin_pixel, size_pixel);
+  std::vector<corkpp::point_t> vertices_pixel;
+  corkpp::point_t origin_pixel{0.0, 0.0, 0.0};
+  corkpp::point_t size_pixel{1.0, 1.0, 0.20};
+  vertices_pixel = corkpp::cube_vertice_maker(origin_pixel, size_pixel);
 
-  auto && vol_norm =  corkpp::calculate_intersection_volume_normal_state(
+  auto &&vol_norm = corkpp::calculate_intersection_volume_normal_state(
       vertices_precipitate, vertices_pixel);
 
-  auto && vol_state =  corkpp::calculate_intersection_volume_state(vertices_precipitate,
-                                                      vertices_pixel);
-  
+  auto &&vol_state = corkpp::calculate_intersection_volume_state(
+      vertices_precipitate, vertices_pixel);
 
-  std::cout <<"verctor:" << std::endl<< vol_norm.normal_vector << std::endl;
-  std::cout <<"vol: " <<vol_state.volume << std::endl;
-  std::cout <<"vol_ratio: " <<vol_norm.volume_ratio << std::endl;
+  std::cout << "verctor:" << std::endl << vol_norm.normal_vector << std::endl;
+  std::cout << "vol: " << vol_state.volume << std::endl;
+  std::cout << "vol_ratio: " << vol_norm.volume_ratio << std::endl;
   std::cout << "status:" << static_cast<int>(vol_norm.status) << std::endl;
   // auto && normal average
 
