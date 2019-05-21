@@ -489,9 +489,9 @@ void compute_difference(const CorkTriMesh &in0, const CorkTriMesh &in1,
 
 void set_intersection_state(VolNormStateIntersection &intersection,
                             REAL vol_precipitate) {
-  if (intersection.volume_ratio < tolerance) {
+  if (intersection.volume_ratio < tolerance_ratio) {
     intersection.status = IntersectionState::non_intersecting;
-  } else if (intersection.volume_ratio > 1 - tolerance) {
+  } else if (intersection.volume_ratio > 1 - tolerance_ratio) {
     intersection.status = IntersectionState::enclosing;
   } else {
     if (intersection.normal_vector.norm() == 0.0) {
