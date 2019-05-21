@@ -94,11 +94,9 @@ auto calculate_intersection_volume_normal_state(
   return ret_structure;
 }
 
-
-
 /*-----------------------------------------------------------------------------*/
 
-  auto calculate_intersection_volume_state(
+auto calculate_intersection_volume_state(
     const std::vector<point_t> vertices_precipitate,
     const std::vector<point_t> vertices_pixel) -> VolStateIntersection {
   std::vector<face_t> faces_precipitate, faces_pixel;
@@ -119,12 +117,15 @@ auto calculate_intersection_volume_normal_state(
 
   ret_structure.volume = volume_calculator(intersection);
   ret_structure.volume_ratio = ret_structure.volume / volume_calculator(pixel);
-
+  complete_structure.volume = ret_structure.volume;
+  complete_structure.volume_ratio = ret_structure.volume_ratio;
   // computeDifference(pixel, precipitate, difference);
   // intersect_of_faces(intersection, difference,
   // intersection_and_difference);
   diff_of_faces(intersection, pixel, intersection_and_difference);
   auto &&vol_precipitate = volume_calculator(precipitate);
+  complete_structure.normal_vector =
+      average_normal_calculator(intersection_and_difference);
   set_intersection_state(complete_structure, vol_precipitate);
   ret_structure.status = complete_structure.status;
   return ret_structure;
