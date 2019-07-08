@@ -211,7 +211,7 @@
 /* #define SINGLE */
 
 // #ifdef SINGLE
-// #define REAL float
+// #define REal float
 // #else  /* not SINGLE */
 
 // #endif /* not SINGLE */
@@ -519,7 +519,7 @@ enum finddirectionresult { WITHIN, LEFTCOLLINEAR, RIGHTCOLLINEAR };
 /*   Because the size and structure of a `triangle' is not decided until */
 /*   runtime, I haven't simply declared the type `triangle' as a struct. */
 #include "triangle.hh"
-typedef REAL **triangle; /* Really:  typedef triangle *triangle   */
+typedef REal **triangle; /* Really:  typedef triangle *triangle   */
 
 typedef int64_t __int64;
 
@@ -538,7 +538,7 @@ struct otri {
 /*   pointers to adjoining triangles, plus one boundary marker, plus one */
 /*   segment number. */
 
-typedef REAL **subseg; /* Really:  typedef subseg *subseg   */
+typedef REal **subseg; /* Really:  typedef subseg *subseg   */
 
 /* An oriented subsegment:  includes a pointer to a subsegment and an */
 /*   orientation.  The orientation denotes a side of the edge.  Hence, there
@@ -551,12 +551,12 @@ struct osub {
   __int64 ssorient; /* Ranges from 0 to 1. */
 };
 
-/* The vertex data structure.  Each vertex is actually an array of REALs. */
-/*   The number of REALs is unknown until runtime.  An integer boundary */
+/* The vertex data structure.  Each vertex is actually an array of REals. */
+/*   The number of REals is unknown until runtime.  An integer boundary */
 /*   marker, and sometimes a pointer to a triangle, is appended after the */
-/*   REALs. */
+/*   REals. */
 
-typedef REAL *vertex;
+typedef REal *vertex;
 
 /* A queue used to store encroached subsegments.  Each subsegment's vertices
  */
@@ -575,7 +575,7 @@ struct badsubseg {
 
 struct badtriang {
   triangle poortri; /* A skinny or too-large triangle. */
-  REAL key;         /* cos^2 of smallest (apical) angle. */
+  REal key;         /* cos^2 of smallest (apical) angle. */
   vertex triangorg, triangdest, triangapex; /* Its three vertices. */
   struct badtriang *nexttriang;             /* Pointer to next bad triangle. */
 };
@@ -602,7 +602,7 @@ struct flipstacker {
 /*   events are given an invalid (smaller than `xmin') x-coordinate `xkey'. */
 
 struct event {
-  REAL xkey, ykey;      /* Coordinates of the event. */
+  REal xkey, ykey;      /* Coordinates of the event. */
   VOID *eventptr;       /* Can be a vertex or the location of a circle event. */
   __int64 heapposition; /* Marks this event's position in the heap. */
 };
@@ -668,12 +668,12 @@ struct memorypool {
 
 /* Global constants. */
 
-REAL splitter; /* Used to split REAL factors for exact multiplication. */
-REAL epsilon;  /* Floating-point machine epsilon. */
-REAL resulterrbound;
-REAL ccwerrboundA, ccwerrboundB, ccwerrboundC;
-REAL iccerrboundA, iccerrboundB, iccerrboundC;
-REAL o3derrboundA, o3derrboundB, o3derrboundC;
+REal splitter; /* Used to split REal factors for exact multiplication. */
+REal epsilon;  /* Floating-point machine epsilon. */
+REal resulterrbound;
+REal ccwerrboundA, ccwerrboundB, ccwerrboundC;
+REal iccerrboundA, iccerrboundB, iccerrboundC;
+REal o3derrboundA, o3derrboundB, o3derrboundC;
 
 /* Random number seed is not constant, but I've made it global anyway. */
 
@@ -713,8 +713,8 @@ struct mesh {
 
   /* Other variables. */
 
-  REAL xmin, xmax, ymin, ymax; /* x and y bounds. */
-  REAL xminextreme;   /* Nonexistent x value used as a flag in sweepline. */
+  REal xmin, xmax, ymin, ymax; /* x and y bounds. */
+  REal xminextreme;   /* Nonexistent x value used as a flag in sweepline. */
   __int64 invertices; /* Number of input vertices. */
   __int64 inelements; /* Number of input triangles. */
   __int64 insegments; /* Number of input segments. */
@@ -824,8 +824,8 @@ struct behavior {
   __int64 order;
   __int64 nobisect;
   __int64 steiner;
-  REAL minangle, goodangle, offconstant;
-  REAL maxarea;
+  REal minangle, goodangle, offconstant;
+  REal maxarea;
 
   /* Variables for file names. */
 
@@ -1154,17 +1154,17 @@ __int64 minus1mod3[3] = {2, 0, 1};
 /* Check or set a triangle's attributes. */
 
 #define elemattribute(otri, attnum)                                            \
-  ((REAL *)(otri).tri)[m->elemattribindex + (attnum)]
+  ((REal *)(otri).tri)[m->elemattribindex + (attnum)]
 
 #define setelemattribute(otri, attnum, value)                                  \
-  ((REAL *)(otri).tri)[m->elemattribindex + (attnum)] = value
+  ((REal *)(otri).tri)[m->elemattribindex + (attnum)] = value
 
 /* Check or set a triangle's maximum area bound. */
 
-#define areabound(otri) ((REAL *)(otri).tri)[m->areaboundindex]
+#define areabound(otri) ((REal *)(otri).tri)[m->areaboundindex]
 
 #define setareabound(otri, value)                                              \
-  ((REAL *)(otri).tri)[m->areaboundindex] = value
+  ((REal *)(otri).tri)[m->areaboundindex] = value
 
 /* Check or set a triangle's deallocation.  Its second pointer is set to */
 /*   NULL to indicate that it is not allocated.  (Its first pointer is used */
@@ -1381,20 +1381,20 @@ __int64 triunsuitable();
 #else /* not EXTERNAL_TEST */
 
 #ifdef ANSI_DECLARATORS
-__int64 triunsuitable(vertex triorg, vertex tridest, vertex triapex, REAL area)
+__int64 triunsuitable(vertex triorg, vertex tridest, vertex triapex, REal area)
 #else  /* not ANSI_DECLARATORS */
 __int64 triunsuitable(triorg, tridest, triapex,
                       area) vertex triorg; /* The triangle's origin vertex. */
 vertex tridest; /* The triangle's destination vertex. */
 vertex triapex; /* The triangle's apex vertex. */
-REAL area;      /* The area of the triangle. */
+REal area;      /* The area of the triangle. */
 #endif /* not ANSI_DECLARATORS */
 
 {
-  REAL dxoa, dxda, dxod;
-  REAL dyoa, dyda, dyod;
-  REAL oalen, dalen, odlen;
-  REAL maxlen;
+  REal dxoa, dxda, dxod;
+  REal dyoa, dyda, dyod;
+  REal oalen, dalen, odlen;
+  REal maxlen;
 
   dxoa = triorg[0] - triapex[0];
   dyoa = triorg[1] - triapex[1];
@@ -3144,7 +3144,7 @@ struct behavior *b;
               k++;
             }
             workstring[k] = '\0';
-            b->minangle = (REAL)strtod(workstring, (char **)NULL);
+            b->minangle = (REal)strtod(workstring, (char **)NULL);
           } else {
             b->minangle = 20.0;
           }
@@ -3162,7 +3162,7 @@ struct behavior *b;
               k++;
             }
             workstring[k] = '\0';
-            b->maxarea = (REAL)strtod(workstring, (char **)NULL);
+            b->maxarea = (REal)strtod(workstring, (char **)NULL);
             if (b->maxarea <= 0.0) {
               printf("Error:  Maximum area must be greater than zero.\n");
               triexit(1);
@@ -4067,7 +4067,7 @@ struct behavior *b;
   /*   followed by the vertex type.  Ensure the vertex marker is aligned to */
   /*   a sizeof(__int64)-byte address. */
   m->vertexmarkindex =
-      ((m->mesh_dim + m->nextras) * sizeof(REAL) + sizeof(__int64) - 1) /
+      ((m->mesh_dim + m->nextras) * sizeof(REal) + sizeof(__int64) - 1) /
       sizeof(__int64);
   vertexsize = (m->vertexmarkindex + 2) * sizeof(__int64);
   if (b->poly) {
@@ -4080,7 +4080,7 @@ struct behavior *b;
   /* Initialize the pool of vertices. */
   poolinit(&m->vertices, vertexsize, VERTEXPERBLOCK,
            m->invertices > VERTEXPERBLOCK ? m->invertices : VERTEXPERBLOCK,
-           sizeof(REAL));
+           sizeof(REal));
 }
 
 /*****************************************************************************/
@@ -4113,19 +4113,19 @@ struct behavior *b;
   trisize = ((b->order + 1) * (b->order + 2) / 2 + (m->highorderindex - 3)) *
             sizeof(triangle);
   /* The index within each triangle at which its attributes are found, */
-  /*   where the index is measured in REALs.                           */
-  m->elemattribindex = (trisize + sizeof(REAL) - 1) / sizeof(REAL);
+  /*   where the index is measured in REals.                           */
+  m->elemattribindex = (trisize + sizeof(REal) - 1) / sizeof(REal);
   /* The index within each triangle at which the maximum area constraint  */
-  /*   is found, where the index is measured in REALs.  Note that if the  */
+  /*   is found, where the index is measured in REals.  Note that if the  */
   /*   `regionattrib' flag is set, an additional attribute will be added. */
   m->areaboundindex = m->elemattribindex + m->eextras + b->regionattrib;
   /* If triangle attributes or an area bound are needed, increase the number
    */
   /*   of bytes occupied by a triangle. */
   if (b->vararea) {
-    trisize = (m->areaboundindex + 1) * sizeof(REAL);
+    trisize = (m->areaboundindex + 1) * sizeof(REal);
   } else if (m->eextras + b->regionattrib > 0) {
-    trisize = m->areaboundindex * sizeof(REAL);
+    trisize = m->areaboundindex * sizeof(REal);
   }
   /* If a Voronoi diagram or triangle neighbor graph is requested, make    */
   /*   sure there's room to store an integer index in each triangle.  This */
@@ -4551,34 +4551,34 @@ struct osub *newsubseg;
   y = b - bvirt
 
 #define Fast_Two_Sum(a, b, x, y)                                               \
-  x = (REAL)(a + b);                                                           \
+  x = (REal)(a + b);                                                           \
   Fast_Two_Sum_Tail(a, b, x, y)
 
 #define Two_Sum_Tail(a, b, x, y)                                               \
-  bvirt = (REAL)(x - a);                                                       \
+  bvirt = (REal)(x - a);                                                       \
   avirt = x - bvirt;                                                           \
   bround = b - bvirt;                                                          \
   around = a - avirt;                                                          \
   y = around + bround
 
 #define Two_Sum(a, b, x, y)                                                    \
-  x = (REAL)(a + b);                                                           \
+  x = (REal)(a + b);                                                           \
   Two_Sum_Tail(a, b, x, y)
 
 #define Two_Diff_Tail(a, b, x, y)                                              \
-  bvirt = (REAL)(a - x);                                                       \
+  bvirt = (REal)(a - x);                                                       \
   avirt = x + bvirt;                                                           \
   bround = bvirt - b;                                                          \
   around = a - avirt;                                                          \
   y = around + bround
 
 #define Two_Diff(a, b, x, y)                                                   \
-  x = (REAL)(a - b);                                                           \
+  x = (REal)(a - b);                                                           \
   Two_Diff_Tail(a, b, x, y)
 
 #define Split(a, ahi, alo)                                                     \
-  c = (REAL)(splitter * a);                                                    \
-  abig = (REAL)(c - a);                                                        \
+  c = (REal)(splitter * a);                                                    \
+  abig = (REal)(c - a);                                                        \
   ahi = c - abig;                                                              \
   alo = a - ahi
 
@@ -4591,14 +4591,14 @@ struct osub *newsubseg;
   y = (alo * blo) - err3
 
 #define Two_Product(a, b, x, y)                                                \
-  x = (REAL)(a * b);                                                           \
+  x = (REal)(a * b);                                                           \
   Two_Product_Tail(a, b, x, y)
 
 /* Two_Product_Presplit() is Two_Product() where one of the inputs has */
 /*   already been split.  Avoids redundant splitting. */
 
 #define Two_Product_Presplit(a, b, bhi, blo, x, y)                             \
-  x = (REAL)(a * b);                                                           \
+  x = (REal)(a * b);                                                           \
   Split(a, ahi, alo);                                                          \
   err1 = x - (ahi * bhi);                                                      \
   err2 = err1 - (alo * bhi);                                                   \
@@ -4614,7 +4614,7 @@ struct osub *newsubseg;
   y = (alo * alo) - err3
 
 #define Square(a, x, y)                                                        \
-  x = (REAL)(a * a);                                                           \
+  x = (REal)(a * a);                                                           \
   Square_Tail(a, x, y)
 
 /* Macros for summing expansions of various fixed lengths.  These are all */
@@ -4665,8 +4665,8 @@ struct osub *newsubseg;
 /*****************************************************************************/
 
 void exactinit() {
-  REAL half;
-  REAL check, lastcheck;
+  REal half;
+  REal check, lastcheck;
   __int64 every_other;
 #ifdef LINUX
   __int64 cword;
@@ -4737,26 +4737,26 @@ void exactinit() {
 /*****************************************************************************/
 
 #ifdef ANSI_DECLARATORS
-__int64 fast_expansion_sum_zeroelim(__int64 elen, REAL *e, __int64 flen,
-                                    REAL *f, REAL *h)
+__int64 fast_expansion_sum_zeroelim(__int64 elen, REal *e, __int64 flen,
+                                    REal *f, REal *h)
 #else  /* not ANSI_DECLARATORS */
 __int64 fast_expansion_sum_zeroelim(elen, e, flen, f,
                                     h) /* h cannot be e or f. */
     __int64 elen;
-REAL *e;
+REal *e;
 __int64 flen;
-REAL *f;
-REAL *h;
+REal *f;
+REal *h;
 #endif /* not ANSI_DECLARATORS */
 
 {
-  REAL Q;
-  INEXACT REAL Qnew;
-  INEXACT REAL hh;
-  INEXACT REAL bvirt;
-  REAL avirt, bround, around;
+  REal Q;
+  INEXACT REal Qnew;
+  INEXACT REal hh;
+  INEXACT REal bvirt;
+  REal avirt, bround, around;
   __int64 eindex, findex, hindex;
-  REAL enow, fnow;
+  REal enow, fnow;
 
   enow = e[0];
   fnow = f[0];
@@ -4833,29 +4833,29 @@ REAL *h;
 /*****************************************************************************/
 
 #ifdef ANSI_DECLARATORS
-__int64 scale_expansion_zeroelim(__int64 elen, REAL *e, REAL b, REAL *h)
+__int64 scale_expansion_zeroelim(__int64 elen, REal *e, REal b, REal *h)
 #else  /* not ANSI_DECLARATORS */
 __int64 scale_expansion_zeroelim(elen, e, b,
                                  h) /* e and h cannot be the same. */
     __int64 elen;
-REAL *e;
-REAL b;
-REAL *h;
+REal *e;
+REal b;
+REal *h;
 #endif /* not ANSI_DECLARATORS */
 
 {
-  INEXACT REAL Q, sum;
-  REAL hh;
-  INEXACT REAL product1;
-  REAL product0;
+  INEXACT REal Q, sum;
+  REal hh;
+  INEXACT REal product1;
+  REal product0;
   __int64 eindex, hindex;
-  REAL enow;
-  INEXACT REAL bvirt;
-  REAL avirt, bround, around;
-  INEXACT REAL c;
-  INEXACT REAL abig;
-  REAL ahi, alo, bhi, blo;
-  REAL err1, err2, err3;
+  REal enow;
+  INEXACT REal bvirt;
+  REal avirt, bround, around;
+  INEXACT REal c;
+  INEXACT REal abig;
+  REal ahi, alo, bhi, blo;
+  REal err1, err2, err3;
 
   Split(b, bhi, blo);
   Two_Product_Presplit(e[0], b, bhi, blo, Q, hh);
@@ -4890,14 +4890,14 @@ REAL *h;
 /*****************************************************************************/
 
 #ifdef ANSI_DECLARATORS
-REAL estimate(__int64 elen, REAL *e)
+REal estimate(__int64 elen, REal *e)
 #else  /* not ANSI_DECLARATORS */
-REAL estimate(elen, e) __int64 elen;
-REAL *e;
+REal estimate(elen, e) __int64 elen;
+REal *e;
 #endif /* not ANSI_DECLARATORS */
 
 {
-  REAL Q;
+  REal Q;
   __int64 eindex;
 
   Q = e[0];
@@ -4928,41 +4928,41 @@ REAL *e;
 /*****************************************************************************/
 
 #ifdef ANSI_DECLARATORS
-REAL counterclockwiseadapt(vertex pa, vertex pb, vertex pc, REAL detsum)
+REal counterclockwiseadapt(vertex pa, vertex pb, vertex pc, REal detsum)
 #else  /* not ANSI_DECLARATORS */
-REAL counterclockwiseadapt(pa, pb, pc, detsum) vertex pa;
+REal counterclockwiseadapt(pa, pb, pc, detsum) vertex pa;
 vertex pb;
 vertex pc;
-REAL detsum;
+REal detsum;
 #endif /* not ANSI_DECLARATORS */
 
 {
-  INEXACT REAL acx, acy, bcx, bcy;
-  REAL acxtail, acytail, bcxtail, bcytail;
-  INEXACT REAL detleft, detright;
-  REAL detlefttail, detrighttail;
-  REAL det, errbound;
-  REAL B[4], C1[8], C2[12], D[16];
-  INEXACT REAL B3;
+  INEXACT REal acx, acy, bcx, bcy;
+  REal acxtail, acytail, bcxtail, bcytail;
+  INEXACT REal detleft, detright;
+  REal detlefttail, detrighttail;
+  REal det, errbound;
+  REal B[4], C1[8], C2[12], D[16];
+  INEXACT REal B3;
   __int64 C1length, C2length, Dlength;
-  REAL u[4];
-  INEXACT REAL u3;
-  INEXACT REAL s1, t1;
-  REAL s0, t0;
+  REal u[4];
+  INEXACT REal u3;
+  INEXACT REal s1, t1;
+  REal s0, t0;
 
-  INEXACT REAL bvirt;
-  REAL avirt, bround, around;
-  INEXACT REAL c;
-  INEXACT REAL abig;
-  REAL ahi, alo, bhi, blo;
-  REAL err1, err2, err3;
-  INEXACT REAL _i, _j;
-  REAL _0;
+  INEXACT REal bvirt;
+  REal avirt, bround, around;
+  INEXACT REal c;
+  INEXACT REal abig;
+  REal ahi, alo, bhi, blo;
+  REal err1, err2, err3;
+  INEXACT REal _i, _j;
+  REal _0;
 
-  acx = (REAL)(pa[0] - pc[0]);
-  bcx = (REAL)(pb[0] - pc[0]);
-  acy = (REAL)(pa[1] - pc[1]);
-  bcy = (REAL)(pb[1] - pc[1]);
+  acx = (REal)(pa[0] - pc[0]);
+  bcx = (REal)(pb[0] - pc[0]);
+  acy = (REal)(pa[1] - pc[1]);
+  bcy = (REal)(pb[1] - pc[1]);
 
   Two_Product(acx, bcy, detleft, detlefttail);
   Two_Product(acy, bcx, detright, detrighttail);
@@ -5015,10 +5015,10 @@ REAL detsum;
 }
 
 #ifdef ANSI_DECLARATORS
-REAL counterclockwise(struct mesh *m, struct behavior *b, vertex pa, vertex pb,
+REal counterclockwise(struct mesh *m, struct behavior *b, vertex pa, vertex pb,
                       vertex pc)
 #else  /* not ANSI_DECLARATORS */
-REAL counterclockwise(m, b, pa, pb, pc) struct mesh *m;
+REal counterclockwise(m, b, pa, pb, pc) struct mesh *m;
 struct behavior *b;
 vertex pa;
 vertex pb;
@@ -5026,8 +5026,8 @@ vertex pc;
 #endif /* not ANSI_DECLARATORS */
 
 {
-  REAL detleft, detright, det;
-  REAL detsum, errbound;
+  REal detleft, detright, det;
+  REal detsum, errbound;
 
   m->counterclockcount++;
 
@@ -5084,84 +5084,84 @@ vertex pc;
 /*****************************************************************************/
 
 #ifdef ANSI_DECLARATORS
-REAL incircleadapt(vertex pa, vertex pb, vertex pc, vertex pd, REAL permanent)
+REal incircleadapt(vertex pa, vertex pb, vertex pc, vertex pd, REal permanent)
 #else  /* not ANSI_DECLARATORS */
-REAL incircleadapt(pa, pb, pc, pd, permanent) vertex pa;
+REal incircleadapt(pa, pb, pc, pd, permanent) vertex pa;
 vertex pb;
 vertex pc;
 vertex pd;
-REAL permanent;
+REal permanent;
 #endif /* not ANSI_DECLARATORS */
 
 {
-  INEXACT REAL adx, bdx, cdx, ady, bdy, cdy;
-  REAL det, errbound;
+  INEXACT REal adx, bdx, cdx, ady, bdy, cdy;
+  REal det, errbound;
 
-  INEXACT REAL bdxcdy1, cdxbdy1, cdxady1, adxcdy1, adxbdy1, bdxady1;
-  REAL bdxcdy0, cdxbdy0, cdxady0, adxcdy0, adxbdy0, bdxady0;
-  REAL bc[4], ca[4], ab[4];
-  INEXACT REAL bc3, ca3, ab3;
-  REAL axbc[8], axxbc[16], aybc[8], ayybc[16], adet[32];
+  INEXACT REal bdxcdy1, cdxbdy1, cdxady1, adxcdy1, adxbdy1, bdxady1;
+  REal bdxcdy0, cdxbdy0, cdxady0, adxcdy0, adxbdy0, bdxady0;
+  REal bc[4], ca[4], ab[4];
+  INEXACT REal bc3, ca3, ab3;
+  REal axbc[8], axxbc[16], aybc[8], ayybc[16], adet[32];
   __int64 axbclen, axxbclen, aybclen, ayybclen, alen;
-  REAL bxca[8], bxxca[16], byca[8], byyca[16], bdet[32];
+  REal bxca[8], bxxca[16], byca[8], byyca[16], bdet[32];
   __int64 bxcalen, bxxcalen, bycalen, byycalen, blen;
-  REAL cxab[8], cxxab[16], cyab[8], cyyab[16], cdet[32];
+  REal cxab[8], cxxab[16], cyab[8], cyyab[16], cdet[32];
   __int64 cxablen, cxxablen, cyablen, cyyablen, clen;
-  REAL abdet[64];
+  REal abdet[64];
   __int64 ablen;
-  REAL fin1[1152], fin2[1152];
-  REAL *finnow, *finother, *finswap;
+  REal fin1[1152], fin2[1152];
+  REal *finnow, *finother, *finswap;
   __int64 finlength;
 
-  REAL adxtail, bdxtail, cdxtail, adytail, bdytail, cdytail;
-  INEXACT REAL adxadx1, adyady1, bdxbdx1, bdybdy1, cdxcdx1, cdycdy1;
-  REAL adxadx0, adyady0, bdxbdx0, bdybdy0, cdxcdx0, cdycdy0;
-  REAL aa[4], bb[4], cc[4];
-  INEXACT REAL aa3, bb3, cc3;
-  INEXACT REAL ti1, tj1;
-  REAL ti0, tj0;
-  REAL u[4], v[4];
-  INEXACT REAL u3, v3;
-  REAL temp8[8], temp16a[16], temp16b[16], temp16c[16];
-  REAL temp32a[32], temp32b[32], temp48[48], temp64[64];
+  REal adxtail, bdxtail, cdxtail, adytail, bdytail, cdytail;
+  INEXACT REal adxadx1, adyady1, bdxbdx1, bdybdy1, cdxcdx1, cdycdy1;
+  REal adxadx0, adyady0, bdxbdx0, bdybdy0, cdxcdx0, cdycdy0;
+  REal aa[4], bb[4], cc[4];
+  INEXACT REal aa3, bb3, cc3;
+  INEXACT REal ti1, tj1;
+  REal ti0, tj0;
+  REal u[4], v[4];
+  INEXACT REal u3, v3;
+  REal temp8[8], temp16a[16], temp16b[16], temp16c[16];
+  REal temp32a[32], temp32b[32], temp48[48], temp64[64];
   __int64 temp8len, temp16alen, temp16blen, temp16clen;
   __int64 temp32alen, temp32blen, temp48len, temp64len;
-  REAL axtbb[8], axtcc[8], aytbb[8], aytcc[8];
+  REal axtbb[8], axtcc[8], aytbb[8], aytcc[8];
   __int64 axtbblen, axtcclen, aytbblen, aytcclen;
-  REAL bxtaa[8], bxtcc[8], bytaa[8], bytcc[8];
+  REal bxtaa[8], bxtcc[8], bytaa[8], bytcc[8];
   __int64 bxtaalen, bxtcclen, bytaalen, bytcclen;
-  REAL cxtaa[8], cxtbb[8], cytaa[8], cytbb[8];
+  REal cxtaa[8], cxtbb[8], cytaa[8], cytbb[8];
   __int64 cxtaalen, cxtbblen, cytaalen, cytbblen;
-  REAL axtbc[8], aytbc[8], bxtca[8], bytca[8], cxtab[8], cytab[8];
+  REal axtbc[8], aytbc[8], bxtca[8], bytca[8], cxtab[8], cytab[8];
   __int64 axtbclen, aytbclen, bxtcalen, bytcalen, cxtablen, cytablen;
-  REAL axtbct[16], aytbct[16], bxtcat[16], bytcat[16], cxtabt[16], cytabt[16];
+  REal axtbct[16], aytbct[16], bxtcat[16], bytcat[16], cxtabt[16], cytabt[16];
   __int64 axtbctlen, aytbctlen, bxtcatlen, bytcatlen, cxtabtlen, cytabtlen;
-  REAL axtbctt[8], aytbctt[8], bxtcatt[8];
-  REAL bytcatt[8], cxtabtt[8], cytabtt[8];
+  REal axtbctt[8], aytbctt[8], bxtcatt[8];
+  REal bytcatt[8], cxtabtt[8], cytabtt[8];
   __int64 axtbcttlen, aytbcttlen, bxtcattlen, bytcattlen, cxtabttlen,
       cytabttlen;
-  REAL abt[8], bct[8], cat[8];
+  REal abt[8], bct[8], cat[8];
   __int64 abtlen, bctlen, catlen;
-  REAL abtt[4], bctt[4], catt[4];
+  REal abtt[4], bctt[4], catt[4];
   __int64 abttlen, bcttlen, cattlen;
-  INEXACT REAL abtt3, bctt3, catt3;
-  REAL negate;
+  INEXACT REal abtt3, bctt3, catt3;
+  REal negate;
 
-  INEXACT REAL bvirt;
-  REAL avirt, bround, around;
-  INEXACT REAL c;
-  INEXACT REAL abig;
-  REAL ahi, alo, bhi, blo;
-  REAL err1, err2, err3;
-  INEXACT REAL _i, _j;
-  REAL _0;
+  INEXACT REal bvirt;
+  REal avirt, bround, around;
+  INEXACT REal c;
+  INEXACT REal abig;
+  REal ahi, alo, bhi, blo;
+  REal err1, err2, err3;
+  INEXACT REal _i, _j;
+  REal _0;
 
-  adx = (REAL)(pa[0] - pd[0]);
-  bdx = (REAL)(pb[0] - pd[0]);
-  cdx = (REAL)(pc[0] - pd[0]);
-  ady = (REAL)(pa[1] - pd[1]);
-  bdy = (REAL)(pb[1] - pd[1]);
-  cdy = (REAL)(pc[1] - pd[1]);
+  adx = (REal)(pa[0] - pd[0]);
+  bdx = (REal)(pb[0] - pd[0]);
+  cdx = (REal)(pc[0] - pd[0]);
+  ady = (REal)(pa[1] - pd[1]);
+  bdy = (REal)(pb[1] - pd[1]);
+  cdy = (REal)(pc[1] - pd[1]);
 
   Two_Product(bdx, cdy, bdxcdy1, bdxcdy0);
   Two_Product(cdx, bdy, cdxbdy1, cdxbdy0);
@@ -5703,10 +5703,10 @@ REAL permanent;
 }
 
 #ifdef ANSI_DECLARATORS
-REAL incircle(struct mesh *m, struct behavior *b, vertex pa, vertex pb,
+REal incircle(struct mesh *m, struct behavior *b, vertex pa, vertex pb,
               vertex pc, vertex pd)
 #else  /* not ANSI_DECLARATORS */
-REAL incircle(m, b, pa, pb, pc, pd) struct mesh *m;
+REal incircle(m, b, pa, pb, pc, pd) struct mesh *m;
 struct behavior *b;
 vertex pa;
 vertex pb;
@@ -5715,11 +5715,11 @@ vertex pd;
 #endif /* not ANSI_DECLARATORS */
 
 {
-  REAL adx, bdx, cdx, ady, bdy, cdy;
-  REAL bdxcdy, cdxbdy, cdxady, adxcdy, adxbdy, bdxady;
-  REAL alift, blift, clift;
-  REAL det;
-  REAL permanent, errbound;
+  REal adx, bdx, cdx, ady, bdy, cdy;
+  REal bdxcdy, cdxbdy, cdxady, adxcdy, adxbdy, bdxady;
+  REal alift, blift, clift;
+  REal det;
+  REal permanent, errbound;
 
   m->incirclecount++;
 
@@ -5784,82 +5784,82 @@ vertex pd;
 /*****************************************************************************/
 
 #ifdef ANSI_DECLARATORS
-REAL orient3dadapt(vertex pa, vertex pb, vertex pc, vertex pd, REAL aheight,
-                   REAL bheight, REAL cheight, REAL dheight, REAL permanent)
+REal orient3dadapt(vertex pa, vertex pb, vertex pc, vertex pd, REal aheight,
+                   REal bheight, REal cheight, REal dheight, REal permanent)
 #else  /* not ANSI_DECLARATORS */
-REAL orient3dadapt(pa, pb, pc, pd, aheight, bheight, cheight, dheight,
+REal orient3dadapt(pa, pb, pc, pd, aheight, bheight, cheight, dheight,
                    permanent) vertex pa;
 vertex pb;
 vertex pc;
 vertex pd;
-REAL aheight;
-REAL bheight;
-REAL cheight;
-REAL dheight;
-REAL permanent;
+REal aheight;
+REal bheight;
+REal cheight;
+REal dheight;
+REal permanent;
 #endif /* not ANSI_DECLARATORS */
 
 {
-  INEXACT REAL adx, bdx, cdx, ady, bdy, cdy, adheight, bdheight, cdheight;
-  REAL det, errbound;
+  INEXACT REal adx, bdx, cdx, ady, bdy, cdy, adheight, bdheight, cdheight;
+  REal det, errbound;
 
-  INEXACT REAL bdxcdy1, cdxbdy1, cdxady1, adxcdy1, adxbdy1, bdxady1;
-  REAL bdxcdy0, cdxbdy0, cdxady0, adxcdy0, adxbdy0, bdxady0;
-  REAL bc[4], ca[4], ab[4];
-  INEXACT REAL bc3, ca3, ab3;
-  REAL adet[8], bdet[8], cdet[8];
+  INEXACT REal bdxcdy1, cdxbdy1, cdxady1, adxcdy1, adxbdy1, bdxady1;
+  REal bdxcdy0, cdxbdy0, cdxady0, adxcdy0, adxbdy0, bdxady0;
+  REal bc[4], ca[4], ab[4];
+  INEXACT REal bc3, ca3, ab3;
+  REal adet[8], bdet[8], cdet[8];
   __int64 alen, blen, clen;
-  REAL abdet[16];
+  REal abdet[16];
   __int64 ablen;
-  REAL *finnow, *finother, *finswap;
-  REAL fin1[192], fin2[192];
+  REal *finnow, *finother, *finswap;
+  REal fin1[192], fin2[192];
   __int64 finlength;
 
-  REAL adxtail, bdxtail, cdxtail;
-  REAL adytail, bdytail, cdytail;
-  REAL adheighttail, bdheighttail, cdheighttail;
-  INEXACT REAL at_blarge, at_clarge;
-  INEXACT REAL bt_clarge, bt_alarge;
-  INEXACT REAL ct_alarge, ct_blarge;
-  REAL at_b[4], at_c[4], bt_c[4], bt_a[4], ct_a[4], ct_b[4];
+  REal adxtail, bdxtail, cdxtail;
+  REal adytail, bdytail, cdytail;
+  REal adheighttail, bdheighttail, cdheighttail;
+  INEXACT REal at_blarge, at_clarge;
+  INEXACT REal bt_clarge, bt_alarge;
+  INEXACT REal ct_alarge, ct_blarge;
+  REal at_b[4], at_c[4], bt_c[4], bt_a[4], ct_a[4], ct_b[4];
   __int64 at_blen, at_clen, bt_clen, bt_alen, ct_alen, ct_blen;
-  INEXACT REAL bdxt_cdy1, cdxt_bdy1, cdxt_ady1;
-  INEXACT REAL adxt_cdy1, adxt_bdy1, bdxt_ady1;
-  REAL bdxt_cdy0, cdxt_bdy0, cdxt_ady0;
-  REAL adxt_cdy0, adxt_bdy0, bdxt_ady0;
-  INEXACT REAL bdyt_cdx1, cdyt_bdx1, cdyt_adx1;
-  INEXACT REAL adyt_cdx1, adyt_bdx1, bdyt_adx1;
-  REAL bdyt_cdx0, cdyt_bdx0, cdyt_adx0;
-  REAL adyt_cdx0, adyt_bdx0, bdyt_adx0;
-  REAL bct[8], cat[8], abt[8];
+  INEXACT REal bdxt_cdy1, cdxt_bdy1, cdxt_ady1;
+  INEXACT REal adxt_cdy1, adxt_bdy1, bdxt_ady1;
+  REal bdxt_cdy0, cdxt_bdy0, cdxt_ady0;
+  REal adxt_cdy0, adxt_bdy0, bdxt_ady0;
+  INEXACT REal bdyt_cdx1, cdyt_bdx1, cdyt_adx1;
+  INEXACT REal adyt_cdx1, adyt_bdx1, bdyt_adx1;
+  REal bdyt_cdx0, cdyt_bdx0, cdyt_adx0;
+  REal adyt_cdx0, adyt_bdx0, bdyt_adx0;
+  REal bct[8], cat[8], abt[8];
   __int64 bctlen, catlen, abtlen;
-  INEXACT REAL bdxt_cdyt1, cdxt_bdyt1, cdxt_adyt1;
-  INEXACT REAL adxt_cdyt1, adxt_bdyt1, bdxt_adyt1;
-  REAL bdxt_cdyt0, cdxt_bdyt0, cdxt_adyt0;
-  REAL adxt_cdyt0, adxt_bdyt0, bdxt_adyt0;
-  REAL u[4], v[12], w[16];
-  INEXACT REAL u3;
+  INEXACT REal bdxt_cdyt1, cdxt_bdyt1, cdxt_adyt1;
+  INEXACT REal adxt_cdyt1, adxt_bdyt1, bdxt_adyt1;
+  REal bdxt_cdyt0, cdxt_bdyt0, cdxt_adyt0;
+  REal adxt_cdyt0, adxt_bdyt0, bdxt_adyt0;
+  REal u[4], v[12], w[16];
+  INEXACT REal u3;
   __int64 vlength, wlength;
-  REAL negate;
+  REal negate;
 
-  INEXACT REAL bvirt;
-  REAL avirt, bround, around;
-  INEXACT REAL c;
-  INEXACT REAL abig;
-  REAL ahi, alo, bhi, blo;
-  REAL err1, err2, err3;
-  INEXACT REAL _i, _j, _k;
-  REAL _0;
+  INEXACT REal bvirt;
+  REal avirt, bround, around;
+  INEXACT REal c;
+  INEXACT REal abig;
+  REal ahi, alo, bhi, blo;
+  REal err1, err2, err3;
+  INEXACT REal _i, _j, _k;
+  REal _0;
 
-  adx = (REAL)(pa[0] - pd[0]);
-  bdx = (REAL)(pb[0] - pd[0]);
-  cdx = (REAL)(pc[0] - pd[0]);
-  ady = (REAL)(pa[1] - pd[1]);
-  bdy = (REAL)(pb[1] - pd[1]);
-  cdy = (REAL)(pc[1] - pd[1]);
-  adheight = (REAL)(aheight - dheight);
-  bdheight = (REAL)(bheight - dheight);
-  cdheight = (REAL)(cheight - dheight);
+  adx = (REal)(pa[0] - pd[0]);
+  bdx = (REal)(pb[0] - pd[0]);
+  cdx = (REal)(pc[0] - pd[0]);
+  ady = (REal)(pa[1] - pd[1]);
+  bdy = (REal)(pb[1] - pd[1]);
+  cdy = (REal)(pc[1] - pd[1]);
+  adheight = (REal)(aheight - dheight);
+  bdheight = (REal)(bheight - dheight);
+  cdheight = (REal)(cheight - dheight);
 
   Two_Product(bdx, cdy, bdxcdy1, bdxcdy0);
   Two_Product(cdx, bdy, cdxbdy1, cdxbdy0);
@@ -6248,28 +6248,28 @@ REAL permanent;
 }
 
 #ifdef ANSI_DECLARATORS
-REAL orient3d(struct mesh *m, struct behavior *b, vertex pa, vertex pb,
-              vertex pc, vertex pd, REAL aheight, REAL bheight, REAL cheight,
-              REAL dheight)
+REal orient3d(struct mesh *m, struct behavior *b, vertex pa, vertex pb,
+              vertex pc, vertex pd, REal aheight, REal bheight, REal cheight,
+              REal dheight)
 #else  /* not ANSI_DECLARATORS */
-REAL orient3d(m, b, pa, pb, pc, pd, aheight, bheight, cheight,
+REal orient3d(m, b, pa, pb, pc, pd, aheight, bheight, cheight,
               dheight) struct mesh *m;
 struct behavior *b;
 vertex pa;
 vertex pb;
 vertex pc;
 vertex pd;
-REAL aheight;
-REAL bheight;
-REAL cheight;
-REAL dheight;
+REal aheight;
+REal bheight;
+REal cheight;
+REal dheight;
 #endif /* not ANSI_DECLARATORS */
 
 {
-  REAL adx, bdx, cdx, ady, bdy, cdy, adheight, bdheight, cdheight;
-  REAL bdxcdy, cdxbdy, cdxady, adxcdy, adxbdy, bdxady;
-  REAL det;
-  REAL permanent, errbound;
+  REal adx, bdx, cdx, ady, bdy, cdy, adheight, bdheight, cdheight;
+  REal bdxcdy, cdxbdy, cdxady, adxcdy, adxbdy, bdxady;
+  REal det;
+  REal permanent, errbound;
 
   m->orient3dcount++;
 
@@ -6332,10 +6332,10 @@ REAL dheight;
 /*****************************************************************************/
 
 #ifdef ANSI_DECLARATORS
-REAL nonregular(struct mesh *m, struct behavior *b, vertex pa, vertex pb,
+REal nonregular(struct mesh *m, struct behavior *b, vertex pa, vertex pb,
                 vertex pc, vertex pd)
 #else  /* not ANSI_DECLARATORS */
-REAL nonregular(m, b, pa, pb, pc, pd) struct mesh *m;
+REal nonregular(m, b, pa, pb, pc, pd) struct mesh *m;
 struct behavior *b;
 vertex pa;
 vertex pb;
@@ -6373,8 +6373,8 @@ vertex pd;
 
 #ifdef ANSI_DECLARATORS
 void findcircumcenter(struct mesh *m, struct behavior *b, vertex torg,
-                      vertex tdest, vertex tapex, vertex circumcenter, REAL *xi,
-                      REAL *eta, __int64 offcenter)
+                      vertex tdest, vertex tapex, vertex circumcenter, REal *xi,
+                      REal *eta, __int64 offcenter)
 #else  /* not ANSI_DECLARATORS */
 void findcircumcenter(m, b, torg, tdest, tapex, circumcenter, xi, eta,
                       offcenter) struct mesh *m;
@@ -6383,16 +6383,16 @@ vertex torg;
 vertex tdest;
 vertex tapex;
 vertex circumcenter;
-REAL *xi;
-REAL *eta;
+REal *xi;
+REal *eta;
 __int64 offcenter;
 #endif /* not ANSI_DECLARATORS */
 
 {
-  REAL xdo, ydo, xao, yao;
-  REAL dodist, aodist, dadist;
-  REAL denominator;
-  REAL dx, dy, dxoff, dyoff;
+  REal xdo, ydo, xao, yao;
+  REal dodist, aodist, dadist;
+  REal denominator;
+  REal dx, dy, dxoff, dyoff;
 
   m->circumcentercount++;
 
@@ -6764,7 +6764,7 @@ struct badtriang *badtri;
 #endif /* not ANSI_DECLARATORS */
 
 {
-  REAL length, multiplier;
+  REal length, multiplier;
   __int64 exponent, expincrement;
   __int64 queuenumber;
   __int64 posexponent;
@@ -6862,13 +6862,13 @@ struct badtriang *badtri;
 
 #ifdef ANSI_DECLARATORS
 void enqueuebadtri(struct mesh *m, struct behavior *b, struct otri *enqtri,
-                   REAL minedge, vertex enqapex, vertex enqorg, vertex enqdest)
+                   REal minedge, vertex enqapex, vertex enqorg, vertex enqdest)
 #else  /* not ANSI_DECLARATORS */
 void enqueuebadtri(m, b, enqtri, minedge, enqapex, enqorg,
                    enqdest) struct mesh *m;
 struct behavior *b;
 struct otri *enqtri;
-REAL minedge;
+REal minedge;
 vertex enqapex;
 vertex enqorg;
 vertex enqdest;
@@ -6965,7 +6965,7 @@ struct osub *testsubseg;
   struct otri neighbortri;
   struct osub testsym;
   struct badsubseg *encroachedseg;
-  REAL dotproduct;
+  REal dotproduct;
   __int64 encroached;
   __int64 sides;
   vertex eorg, edest, eapex;
@@ -7079,12 +7079,12 @@ struct otri *testtri;
   vertex base1, base2;
   vertex org1, dest1, org2, dest2;
   vertex joinvertex;
-  REAL dxod, dyod, dxda, dyda, dxao, dyao;
-  REAL dxod2, dyod2, dxda2, dyda2, dxao2, dyao2;
-  REAL apexlen, orglen, destlen, minedge;
-  REAL angle;
-  REAL area;
-  REAL dist1, dist2;
+  REal dxod, dyod, dxda, dyda, dxao, dyao;
+  REal dxod2, dyod2, dxda2, dyda2, dxao2, dyao2;
+  REal apexlen, orglen, destlen, minedge;
+  REal angle;
+  REal area;
+  REal dist1, dist2;
   subseg sptr;  /* Temporary variable used by tspivot(). */
   triangle ptr; /* Temporary variable used by oprev() and dnext(). */
 
@@ -7363,7 +7363,7 @@ __int64 stopatsubsegment;
   struct otri backtracktri;
   struct osub checkedge;
   vertex forg, fdest, fapex;
-  REAL orgorient, destorient;
+  REal orgorient, destorient;
   __int64 moveleft;
   triangle ptr; /* Temporary variable used by sym(). */
   subseg sptr;  /* Temporary variable used by tspivot(). */
@@ -7507,8 +7507,8 @@ struct otri *searchtri;
   struct otri sampletri;
   vertex torg, tdest;
   __int64 alignptr;
-  REAL searchdist, dist;
-  REAL ahead;
+  REal searchdist, dist;
+  REal ahead;
   __int64 samplesperblock, totalsamplesleft, samplesleft;
   __int64 population, totalpopulation;
   triangle ptr; /* Temporary variable used by sym(). */
@@ -8091,8 +8091,8 @@ __int64 triflaws;
   vertex first;
   vertex leftvertex, rightvertex, botvertex, topvertex, farvertex;
   vertex segmentorg, segmentdest;
-  REAL attrib;
-  REAL area;
+  REal attrib;
+  REal area;
   enum insertvertexresult success;
   enum locateresult intersect;
   __int64 doflip;
@@ -9078,7 +9078,7 @@ __int64 arraysize;
 {
   __int64 left, right;
   __int64 pivot;
-  REAL pivotx, pivoty;
+  REal pivotx, pivoty;
   vertex temp;
 
   if (arraysize == 2) {
@@ -9154,7 +9154,7 @@ __int64 axis;
 {
   __int64 left, right;
   __int64 pivot;
-  REAL pivot1, pivot2;
+  REal pivot1, pivot2;
   vertex temp;
 
   if (arraysize == 2) {
@@ -9631,7 +9631,7 @@ struct otri *farright;
 {
   struct otri midtri, tri1, tri2, tri3;
   struct otri innerleft, innerright;
-  REAL area;
+  REal area;
   __int64 divider;
 
   if (b->verbose > 2) {
@@ -9936,7 +9936,7 @@ struct behavior *b;
 
 {
   struct otri inftri; /* Handle for the triangular bounding box. */
-  REAL width;
+  REal width;
 
   if (b->verbose) {
     printf("  Creating triangular bounding box.\n");
@@ -10148,7 +10148,7 @@ struct event *newevent;
 #endif /* not ANSI_DECLARATORS */
 
 {
-  REAL eventx, eventy;
+  REal eventx, eventy;
   __int64 eventnum;
   __int64 parent;
   __int64 notdone;
@@ -10188,7 +10188,7 @@ __int64 eventnum;
 
 {
   struct event *thisevent;
-  REAL eventx, eventy;
+  REal eventx, eventy;
   __int64 leftchild, rightchild;
   __int64 smallest;
   __int64 notdone;
@@ -10243,7 +10243,7 @@ __int64 eventnum;
 
 {
   struct event *moveevent;
-  REAL eventx, eventy;
+  REal eventx, eventy;
   __int64 parent;
   __int64 notdone;
 
@@ -10323,7 +10323,7 @@ vertex newsite;
 
 {
   vertex leftvertex, rightvertex;
-  REAL dxa, dya, dxb, dyb;
+  REal dxa, dya, dxb, dyb;
 
   m->hyperbolacount++;
 
@@ -10351,18 +10351,18 @@ vertex newsite;
 #ifndef REDUCED
 
 #ifdef ANSI_DECLARATORS
-REAL circletop(struct mesh *m, vertex pa, vertex pb, vertex pc, REAL ccwabc)
+REal circletop(struct mesh *m, vertex pa, vertex pb, vertex pc, REal ccwabc)
 #else  /* not ANSI_DECLARATORS */
-REAL circletop(m, pa, pb, pc, ccwabc) struct mesh *m;
+REal circletop(m, pa, pb, pc, ccwabc) struct mesh *m;
 vertex pa;
 vertex pb;
 vertex pc;
-REAL ccwabc;
+REal ccwabc;
 #endif /* not ANSI_DECLARATORS */
 
 {
-  REAL xac, yac, xbc, ybc, xab, yab;
-  REAL aclen2, bclen2, ablen2;
+  REal xac, yac, xbc, ybc, xab, yab;
+  REal aclen2, bclen2, ablen2;
 
   m->circletopcount++;
 
@@ -10572,7 +10572,7 @@ vertex searchpoint;
 #ifdef ANSI_DECLARATORS
 struct splaynode *
 circletopinsert(struct mesh *m, struct behavior *b, struct splaynode *splayroot,
-                struct otri *newkey, vertex pa, vertex pb, vertex pc, REAL topy)
+                struct otri *newkey, vertex pa, vertex pb, vertex pc, REal topy)
 #else  /* not ANSI_DECLARATORS */
 struct splaynode *circletopinsert(m, b, splayroot, newkey, pa, pb, pc,
                                   topy) struct mesh *m;
@@ -10582,14 +10582,14 @@ struct otri *newkey;
 vertex pa;
 vertex pb;
 vertex pc;
-REAL topy;
+REal topy;
 #endif /* not ANSI_DECLARATORS */
 
 {
-  REAL ccwabc;
-  REAL xac, yac, xbc, ybc;
-  REAL aclen2, bclen2;
-  REAL searchpoint[2];
+  REal ccwabc;
+  REal xac, yac, xbc, ybc;
+  REal aclen2, bclen2;
+  REal searchpoint[2];
   struct otri dummytri;
 
   ccwabc = counterclockwise(m, b, pa, pb, pc);
@@ -10666,7 +10666,7 @@ struct behavior *b;
   vertex nextvertex, lastvertex;
   vertex connectvertex;
   vertex leftvertex, midvertex, rightvertex;
-  REAL lefttest, righttest;
+  REal lefttest, righttest;
   __int64 heapsize;
   __int64 check4events, farrightflag;
   triangle ptr; /* Temporary variable used by sym(), onext(), and oprev(). */
@@ -10951,7 +10951,7 @@ struct behavior *b;
 
 #ifdef ANSI_DECLARATORS
 __int64 reconstruct(struct mesh *m, struct behavior *b, __int64 *trianglelist,
-                    REAL *triangleattriblist, REAL *trianglearealist,
+                    REal *triangleattriblist, REal *trianglearealist,
                     __int64 elements, __int64 corners, __int64 attribs,
                     __int64 *segmentlist, __int64 *segmentmarkerlist,
                     __int64 numberofsegments)
@@ -10961,8 +10961,8 @@ __int64 reconstruct(m, b, trianglelist, triangleattriblist, trianglearealist,
                     numberofsegments) struct mesh *m;
 struct behavior *b;
 __int64 *trianglelist;
-REAL *triangleattriblist;
-REAL *trianglearealist;
+REal *triangleattriblist;
+REal *trianglearealist;
 __int64 elements;
 __int64 corners;
 __int64 attribs;
@@ -11013,7 +11013,7 @@ FILE *polyfile;
   vertex shorg;
   vertex killvertex;
   vertex segmentorg, segmentdest;
-  REAL area;
+  REal area;
   __int64 corner[3];
   __int64 end[2];
   __int64 killvertexindex;
@@ -11211,7 +11211,7 @@ FILE *polyfile;
           setelemattribute(triangleloop, j, 0);
         } else {
           setelemattribute(triangleloop, j,
-                           (REAL)strtod(stringptr, &stringptr));
+                           (REal)strtod(stringptr, &stringptr));
         }
 #endif /* not TRILIBRARY */
   }
@@ -11226,7 +11226,7 @@ FILE *polyfile;
         if (*stringptr == '\0') {
           area = -1.0; /* No constraint on this triangle. */
         } else {
-          area = (REAL)strtod(stringptr, &stringptr);
+          area = (REal)strtod(stringptr, &stringptr);
         }
 #endif /* not TRILIBRARY */
     setareabound(triangleloop, area);
@@ -11466,7 +11466,7 @@ vertex searchpoint;
   struct otri checktri;
   vertex startvertex;
   vertex leftvertex, rightvertex;
-  REAL leftccw, rightccw;
+  REal leftccw, rightccw;
   __int64 leftflag, rightflag;
   triangle ptr; /* Temporary variable used by onext() and oprev(). */
 
@@ -11565,10 +11565,10 @@ vertex endpoint2;
   vertex newvertex;
   enum insertvertexresult success;
   enum finddirectionresult collinear;
-  REAL ex, ey;
-  REAL tx, ty;
-  REAL etx, ety;
-  REAL split, denom;
+  REal ex, ey;
+  REal tx, ty;
+  REal etx, ety;
+  REal split, denom;
   __int64 i;
   triangle ptr; /* Temporary variable used by onext(). */
   subseg sptr;  /* Temporary variable used by snext(). */
@@ -12016,7 +12016,7 @@ __int64 newmark;
   struct osub crosssubseg;
   vertex endpoint1;
   vertex farvertex;
-  REAL area;
+  REal area;
   __int64 collision;
   __int64 done;
   triangle ptr; /* Temporary variable used by sym() and oprev(). */
@@ -12714,12 +12714,12 @@ struct behavior *b;
 /*****************************************************************************/
 
 #ifdef ANSI_DECLARATORS
-void regionplague(struct mesh *m, struct behavior *b, REAL attribute, REAL area)
+void regionplague(struct mesh *m, struct behavior *b, REal attribute, REal area)
 #else  /* not ANSI_DECLARATORS */
 void regionplague(m, b, attribute, area) struct mesh *m;
 struct behavior *b;
-REAL attribute;
-REAL area;
+REal attribute;
+REal area;
 #endif /* not ANSI_DECLARATORS */
 
 {
@@ -12825,14 +12825,14 @@ REAL area;
 /*****************************************************************************/
 
 #ifdef ANSI_DECLARATORS
-void carveholes(struct mesh *m, struct behavior *b, std::vector<REAL> holelist,
-                __int64 holes, std::vector<REAL> regionlist, __int64 regions)
+void carveholes(struct mesh *m, struct behavior *b, std::vector<REal> holelist,
+                __int64 holes, std::vector<REal> regionlist, __int64 regions)
 #else  /* not ANSI_DECLARATORS */
 void carveholes(m, b, holelist, holes, regionlist, regions) struct mesh *m;
 struct behavior *b;
-REAL *holelist;
+REal *holelist;
 __int64 holes;
-REAL *regionlist;
+REal *regionlist;
 __int64 regions;
 #endif /* not ANSI_DECLARATORS */
 
@@ -13092,9 +13092,9 @@ void splitencsegs(struct mesh *m, struct behavior *b, __int64 triflaws)
   vertex eorg, edest, eapex;
   vertex newvertex;
   enum insertvertexresult success;
-  REAL segmentlength, nearestpoweroftwo;
-  REAL split;
-  REAL multiplier, divisor;
+  REal segmentlength, nearestpoweroftwo;
+  REal split;
+  REal multiplier, divisor;
   __int64 acuteorg, acuteorg2, acutedest, acutedest2;
   __int64 dummy;
   __int64 i;
@@ -13335,7 +13335,7 @@ void splittriangle(struct mesh *m, struct behavior *b, struct badtriang *badtri)
   struct otri badotri;
   vertex borg, bdest, bapex;
   vertex newvertex;
-  REAL xi, eta;
+  REal xi, eta;
   enum insertvertexresult success;
   __int64 errorflag;
   __int64 i;
@@ -13737,7 +13737,7 @@ void readnodes(struct mesh *m, struct behavior *b, char *nodefilename,
   char inputline[INPUTLINESIZE];
   char *stringptr;
   char *infilename;
-  REAL x, y;
+  REal x, y;
   __int64 firstnode;
   __int64 nodemarkers;
   __int64 currentmarker;
@@ -13854,13 +13854,13 @@ void readnodes(struct mesh *m, struct behavior *b, char *nodefilename,
       printf("Error:  Vertex %d has no x coordinate.\n", b->firstnumber + i);
       triexit(1);
     }
-    x = (REAL)strtod(stringptr, &stringptr);
+    x = (REal)strtod(stringptr, &stringptr);
     stringptr = findfield(stringptr);
     if (*stringptr == '\0') {
       printf("Error:  Vertex %d has no y coordinate.\n", b->firstnumber + i);
       triexit(1);
     }
-    y = (REAL)strtod(stringptr, &stringptr);
+    y = (REal)strtod(stringptr, &stringptr);
     vertexloop[0] = x;
     vertexloop[1] = y;
     /* Read the vertex attributes. */
@@ -13869,7 +13869,7 @@ void readnodes(struct mesh *m, struct behavior *b, char *nodefilename,
       if (*stringptr == '\0') {
         vertexloop[j] = 0.0;
       } else {
-        vertexloop[j] = (REAL)strtod(stringptr, &stringptr);
+        vertexloop[j] = (REal)strtod(stringptr, &stringptr);
       }
     }
     if (nodemarkers) {
@@ -13918,16 +13918,16 @@ void readnodes(struct mesh *m, struct behavior *b, char *nodefilename,
 
 #ifdef ANSI_DECLARATORS
 void transfernodes(struct mesh *m, struct behavior *b,
-                   std::vector<REAL> pointlist,
-                   std::vector<REAL> pointattriblist,
+                   std::vector<REal> pointlist,
+                   std::vector<REal> pointattriblist,
                    std::vector<__int64> pointmarkerlist, __int64 numberofpoints,
                    __int64 numberofpointattribs)
 #else  /* not ANSI_DECLARATORS */
   void transfernodes(m, b, pointlist, pointattriblist, pointmarkerlist,
                      numberofpoints, numberofpointattribs) struct mesh *m;
   struct behavior *b;
-  std::vector<REAL> pointlist;
-  std::vector<REAL> pointattriblist;
+  std::vector<REal> pointlist;
+  std::vector<REal> pointattriblist;
   std::vector<__int64> pointmarkerlist;
   __int64 numberofpoints;
   __int64 numberofpointattribs;
@@ -13935,7 +13935,7 @@ void transfernodes(struct mesh *m, struct behavior *b,
 
 {
   vertex vertexloop;
-  REAL x, y;
+  REal x, y;
   __int64 i, j;
   __int64 coordindex;
   __int64 attribindex;
@@ -14004,7 +14004,7 @@ void transfernodes(struct mesh *m, struct behavior *b,
 
 #ifdef ANSI_DECLARATORS
 void readholes(struct mesh *m, struct behavior *b, FILE *polyfile,
-               char *polyfilename, REAL **hlist, __int64 *holes, REAL **rlist,
+               char *polyfilename, REal **hlist, __int64 *holes, REal **rlist,
                __int64 *regions)
 #else  /* not ANSI_DECLARATORS */
   void readholes(m, b, polyfile, polyfilename, hlist, holes, rlist,
@@ -14012,15 +14012,15 @@ void readholes(struct mesh *m, struct behavior *b, FILE *polyfile,
   struct behavior *b;
   FILE *polyfile;
   char *polyfilename;
-  REAL **hlist;
+  REal **hlist;
   __int64 *holes;
-  REAL **rlist;
+  REal **rlist;
   __int64 *regions;
 #endif /* not ANSI_DECLARATORS */
 
 {
-  REAL *holelist;
-  REAL *regionlist;
+  REal *holelist;
+  REal *regionlist;
   char inputline[INPUTLINESIZE];
   char *stringptr;
   __int64 index;
@@ -14030,7 +14030,7 @@ void readholes(struct mesh *m, struct behavior *b, FILE *polyfile,
   stringptr = readline(inputline, polyfile, polyfilename);
   *holes = (__int64)strtol(stringptr, &stringptr, 0);
   if (*holes > 0) {
-    holelist = (REAL *)trimalloc(2 * *holes * (__int64)sizeof(REAL));
+    holelist = (REal *)trimalloc(2 * *holes * (__int64)sizeof(REal));
     *hlist = holelist;
     for (i = 0; i < 2 * *holes; i += 2) {
       stringptr = readline(inputline, polyfile, polyfilename);
@@ -14040,7 +14040,7 @@ void readholes(struct mesh *m, struct behavior *b, FILE *polyfile,
                b->firstnumber + (i >> 1));
         triexit(1);
       } else {
-        holelist[i] = (REAL)strtod(stringptr, &stringptr);
+        holelist[i] = (REal)strtod(stringptr, &stringptr);
       }
       stringptr = findfield(stringptr);
       if (*stringptr == '\0') {
@@ -14048,11 +14048,11 @@ void readholes(struct mesh *m, struct behavior *b, FILE *polyfile,
                b->firstnumber + (i >> 1));
         triexit(1);
       } else {
-        holelist[i + 1] = (REAL)strtod(stringptr, &stringptr);
+        holelist[i + 1] = (REal)strtod(stringptr, &stringptr);
       }
     }
   } else {
-    *hlist = (REAL *)NULL;
+    *hlist = (REal *)NULL;
   }
 
 #ifndef CDT_ONLY
@@ -14061,7 +14061,7 @@ void readholes(struct mesh *m, struct behavior *b, FILE *polyfile,
     stringptr = readline(inputline, polyfile, polyfilename);
     *regions = (__int64)strtol(stringptr, &stringptr, 0);
     if (*regions > 0) {
-      regionlist = (REAL *)trimalloc(4 * *regions * (__int64)sizeof(REAL));
+      regionlist = (REal *)trimalloc(4 * *regions * (__int64)sizeof(REal));
       *rlist = regionlist;
       index = 0;
       for (i = 0; i < *regions; i++) {
@@ -14072,7 +14072,7 @@ void readholes(struct mesh *m, struct behavior *b, FILE *polyfile,
                  b->firstnumber + i);
           triexit(1);
         } else {
-          regionlist[index++] = (REAL)strtod(stringptr, &stringptr);
+          regionlist[index++] = (REal)strtod(stringptr, &stringptr);
         }
         stringptr = findfield(stringptr);
         if (*stringptr == '\0') {
@@ -14080,7 +14080,7 @@ void readholes(struct mesh *m, struct behavior *b, FILE *polyfile,
                  b->firstnumber + i);
           triexit(1);
         } else {
-          regionlist[index++] = (REAL)strtod(stringptr, &stringptr);
+          regionlist[index++] = (REal)strtod(stringptr, &stringptr);
         }
         stringptr = findfield(stringptr);
         if (*stringptr == '\0') {
@@ -14089,13 +14089,13 @@ void readholes(struct mesh *m, struct behavior *b, FILE *polyfile,
               b->firstnumber + i);
           triexit(1);
         } else {
-          regionlist[index++] = (REAL)strtod(stringptr, &stringptr);
+          regionlist[index++] = (REal)strtod(stringptr, &stringptr);
         }
         stringptr = findfield(stringptr);
         if (*stringptr == '\0') {
           regionlist[index] = regionlist[index - 1];
         } else {
-          regionlist[index] = (REAL)strtod(stringptr, &stringptr);
+          regionlist[index] = (REal)strtod(stringptr, &stringptr);
         }
         index++;
       }
@@ -14103,7 +14103,7 @@ void readholes(struct mesh *m, struct behavior *b, FILE *polyfile,
   } else {
     /* Set `*regions' to zero to avoid an accidental free() later. */
     *regions = 0;
-    *rlist = (REAL *)NULL;
+    *rlist = (REal *)NULL;
   }
 #endif /* not CDT_ONLY */
 
@@ -14156,8 +14156,8 @@ void finishfile(FILE *outfile, __int64 argc, char **argv)
 
 #ifdef ANSI_DECLARATORS
 void writenodes(struct mesh *m, struct behavior *b,
-                std::vector<REAL> &pointlist,
-                std::vector<REAL> &pointattriblist,
+                std::vector<REal> &pointlist,
+                std::vector<REal> &pointattriblist,
                 std::vector<__int64> &pointmarkerlist)
 #else  /* not ANSI_DECLARATORS */
   void writenodes(m, b, pointlist, pointattriblist,
@@ -14321,12 +14321,12 @@ struct behavior *b;
 #ifdef ANSI_DECLARATORS
 void writeelements(struct mesh *m, struct behavior *b,
                    std::vector<__int64> &trianglelist,
-                   std::vector<REAL> &triangleattriblist)
+                   std::vector<REal> &triangleattriblist)
 #else  /* not ANSI_DECLARATORS */
   void writeelements(m, b, trianglelist, triangleattriblist) struct mesh *m;
   struct behavior *b;
   __int64 **trianglelist;
-  REAL **triangleattriblist;
+  REal **triangleattriblist;
 #endif /* not ANSI_DECLARATORS */
 
 #else /* not TRILIBRARY */
@@ -14470,16 +14470,16 @@ void writepoly(struct mesh *m, struct behavior *b,
 
 #ifdef ANSI_DECLARATORS
 void writepoly(struct mesh *m, struct behavior *b, char *polyfilename,
-               REAL *holelist, __int64 holes, REAL *regionlist, __int64 regions,
+               REal *holelist, __int64 holes, REal *regionlist, __int64 regions,
                __int64 argc, char **argv)
 #else  /* not ANSI_DECLARATORS */
 void writepoly(m, b, polyfilename, holelist, holes, regionlist, regions, argc,
                argv) struct mesh *m;
 struct behavior *b;
 char *polyfilename;
-REAL *holelist;
+REal *holelist;
 __int64 holes;
-REAL *regionlist;
+REal *regionlist;
 __int64 regions;
 __int64 argc;
 char **argv;
@@ -14749,22 +14749,22 @@ char **argv;
 
 #ifdef ANSI_DECLARATORS
 void writevoronoi(struct mesh *m, struct behavior *b,
-                  std::vector<REAL> &vpointlist,
-                  std::vector<REAL> &vpointattriblist,
+                  std::vector<REal> &vpointlist,
+                  std::vector<REal> &vpointattriblist,
                   std::vector<__int64> &vpointmarkerlist,
                   std::vector<__int64> &vedgelist,
                   std::vector<__int64> &vedgemarkerlist,
-                  std::vector<REAL> &vnormlist)
+                  std::vector<REal> &vnormlist)
 #else  /* not ANSI_DECLARATORS */
   void writevoronoi(m, b, vpointlist, vpointattriblist, vpointmarkerlist,
                     vedgelist, vedgemarkerlist, vnormlist) struct mesh *m;
   struct behavior *b;
-  REAL **vpointlist;
-  REAL **vpointattriblist;
+  REal **vpointlist;
+  REal **vpointattriblist;
   __int64 **vpointmarkerlist;
   __int64 **vedgelist;
   __int64 **vedgemarkerlist;
-  REAL **vnormlist;
+  REal **vnormlist;
 #endif /* not ANSI_DECLARATORS */
 
 #else /* not TRILIBRARY */
@@ -14794,8 +14794,8 @@ char **argv;
 #endif /* not TRILIBRARY */
   struct otri triangleloop, trisym;
   vertex torg, tdest, tapex;
-  REAL circumcenter[2];
-  REAL xi, eta;
+  REal circumcenter[2];
+  REal xi, eta;
   __int64 vnodenumber, vedgenumber;
   __int64 p1, p2;
   __int64 i;
@@ -14882,7 +14882,7 @@ char **argv;
   // *vedgemarkerlist = (__int64 *) NULL;
   /* Allocate memory for output Voronoi norms if necessary. */
   if (vnormlist.size() == 0) {
-    vnormlist.resize(m->edges * 2 * sizeof(REAL));
+    vnormlist.resize(m->edges * 2 * sizeof(REal));
   }
   // elist = *vedgelist;
   // normlist = *vnormlist;
@@ -15159,22 +15159,22 @@ struct behavior *b;
 {
   struct otri triangleloop;
   vertex p[3];
-  REAL cossquaretable[8];
-  REAL ratiotable[16];
-  REAL dx[3], dy[3];
-  REAL edgelength[3];
-  REAL dotproduct;
-  REAL cossquare;
-  REAL triarea;
-  REAL shortest, longest;
-  REAL trilongest2;
-  REAL smallestarea, biggestarea;
-  REAL triminaltitude2;
-  REAL minaltitude;
-  REAL triaspect2;
-  REAL worstaspect;
-  REAL smallestangle, biggestangle;
-  REAL radconst, degconst;
+  REal cossquaretable[8];
+  REal ratiotable[16];
+  REal dx[3], dy[3];
+  REal edgelength[3];
+  REal dotproduct;
+  REal cossquare;
+  REal triarea;
+  REal shortest, longest;
+  REal trilongest2;
+  REal smallestarea, biggestarea;
+  REal triminaltitude2;
+  REal minaltitude;
+  REal triaspect2;
+  REal worstaspect;
+  REal smallestangle, biggestangle;
+  REal radconst, degconst;
   __int64 angletable[18];
   __int64 aspecttable[16];
   __int64 aspectindex;
@@ -15186,7 +15186,7 @@ struct behavior *b;
   radconst = PI / 18.0;
   degconst = 180.0 / PI;
   for (i = 0; i < 8; i++) {
-    cossquaretable[i] = cos(radconst * (REAL)(i + 1));
+    cossquaretable[i] = cos(radconst * (REal)(i + 1));
     cossquaretable[i] = cossquaretable[i] * cossquaretable[i];
   }
   for (i = 0; i < 18; i++) {
@@ -15503,8 +15503,8 @@ char **argv;
 {
   struct mesh m;
   struct behavior b;
-  std::vector<REAL> holearray; /* Array of holes. */
-  std::vector<REAL>
+  std::vector<REal> holearray; /* Array of holes. */
+  std::vector<REal>
       regionarray; /* Array of regional attributes and area constraints. */
 #ifndef TRILIBRARY
   FILE *polyfile;
@@ -15745,8 +15745,8 @@ char **argv;
         out->holelist = in->holelist;
         out->regionlist = in->regionlist;
       } else {
-        // out->holelist = (REAL *) NULL;
-        // out->regionlist = (REAL *) NULL;
+        // out->holelist = (REal *) NULL;
+        // out->regionlist = (REal *) NULL;
       }
 #else  /* not TRILIBRARY */
       writepoly(&m, &b, b.outpolyfilename, holearray, m.holes, regionarray,

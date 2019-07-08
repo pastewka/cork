@@ -134,7 +134,7 @@ auto calculate_intersection_volume_state(
 /*-----------------------------------------------------------------------------*/
 auto calculate_intersection_volume(
     const std::vector<point_t> vertices_precipitate,
-    const std::vector<point_t> vertices_pixel) -> REAL {
+    const std::vector<point_t> vertices_pixel) -> REal {
   std::vector<face_t> faces_precipitate, faces_pixel;
   make_faces_from_nodes(vertices_precipitate, faces_precipitate);
   make_faces_from_nodes(vertices_pixel, faces_pixel);
@@ -280,7 +280,7 @@ double volume_calculator(const CorkTriMesh &in) {
 }
 /*-----------------------------------------------------------------------------*/
 void intersect_of_faces(const CorkTriMesh &in0, const CorkTriMesh &in1,
-                        CorkTriMesh &out, REAL pixel_size) {
+                        CorkTriMesh &out, REal pixel_size) {
   vector_t normal0;
   normal0 << 0.0, 0.0, 0.0;
   std::vector<vector_t> normals1(in1.n_triangles, normal0);
@@ -353,7 +353,7 @@ void intersect_of_faces(const CorkTriMesh &in0, const CorkTriMesh &in1,
 
 /*-----------------------------------------------------------------------------*/
 void diff_of_faces(const CorkTriMesh &in0, const CorkTriMesh &in1,
-                   CorkTriMesh &out, REAL pixel_size) {
+                   CorkTriMesh &out, REal pixel_size) {
   vector_t normal0;
   normal0 << 0.0, 0.0, 0.0;
   point_t vertice{0.0, 0.0, 0.0};
@@ -489,7 +489,7 @@ void compute_difference(const CorkTriMesh &in0, const CorkTriMesh &in1,
 /*-----------------------------------------------------------------------------*/
 
 void set_intersection_state(VolNormStateIntersection &intersection,
-                            REAL vol_precipitate) {
+                            REal vol_precipitate) {
   if (intersection.volume_ratio < tolerance_ratio) {
     intersection.status = IntersectionState::non_intersecting;
   } else if (intersection.volume_ratio > 1 - tolerance_ratio) {

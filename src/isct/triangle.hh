@@ -101,9 +101,9 @@
 /*  `pointlist':  An array of point coordinates.  The first point's x        */
 /*    coordinate is at index [0] and its y coordinate at index [1], followed */
 /*    by the coordinates of the remaining points.  Each point occupies two   */
-/*    REALs.                                                                 */
+/*    REals.                                                                 */
 /*  `pointattributelist':  An array of point attributes.  Each point's       */
-/*    attributes occupy `numberofpointattributes' REALs.                     */
+/*    attributes occupy `numberofpointattributes' REals.                     */
 /*  `pointmarkerlist':  An array of point markers; one int per point.        */
 /*                                                                           */
 /*  `trianglelist':  An array of triangle corners.  The first triangle's     */
@@ -112,8 +112,8 @@
 /*    represents a nonlinear element.  Each triangle occupies                */
 /*    `numberofcorners' ints.                                                */
 /*  `triangleattributelist':  An array of triangle attributes.  Each         */
-/*    triangle's attributes occupy `numberoftriangleattributes' REALs.       */
-/*  `trianglearealist':  An array of triangle area constraints; one REAL per */
+/*    triangle's attributes occupy `numberoftriangleattributes' REals.       */
+/*  `trianglearealist':  An array of triangle area constraints; one REal per */
 /*    triangle.  Input only.                                                 */
 /*  `neighborlist':  An array of triangle neighbors; three ints per          */
 /*    triangle.  Output only.                                                */
@@ -125,14 +125,14 @@
 /*                                                                           */
 /*  `holelist':  An array of holes.  The first hole's x and y coordinates    */
 /*    are at indices [0] and [1], followed by the remaining holes.  Two      */
-/*    REALs per hole.  Input only, although the pointer is copied to the     */
+/*    REals per hole.  Input only, although the pointer is copied to the     */
 /*    output structure for your convenience.                                 */
 /*                                                                           */
 /*  `regionlist':  An array of regional attributes and area constraints.     */
 /*    The first constraint's x and y coordinates are at indices [0] and [1], */
 /*    followed by the regional attribute at index [2], followed by the       */
 /*    maximum area at index [3], followed by the remaining area constraints. */
-/*    Four REALs per area constraint.  Note that each regional attribute is  */
+/*    Four REals per area constraint.  Note that each regional attribute is  */
 /*    used only if you select the `A' switch, and each area constraint is    */
 /*    used only if you select the `a' switch (with no number following), but */
 /*    omitting one of these switches does not change the memory layout.      */
@@ -148,7 +148,7 @@
 /*    Voronoi diagrams.  The first normal vector's x and y magnitudes are    */
 /*    at indices [0] and [1], followed by the remaining vectors.  For each   */
 /*    finite edge in a Voronoi diagram, the normal vector written is the     */
-/*    zero vector.  Two REALs per edge.  Output only.                        */
+/*    zero vector.  Two REals per edge.  Output only.                        */
 /*                                                                           */
 /*                                                                           */
 /*  Any input fields that Triangle will examine must be initialized.         */
@@ -255,17 +255,17 @@
 
 namespace corkpp {
 typedef int64_t __int64;
-typedef double REAL;
+typedef double REal;
 struct triangulateio {
-  std::vector<REAL> pointlist;          /* In / out */
-  std::vector<REAL> pointattributelist; /* In / out */
+  std::vector<REal> pointlist;          /* In / out */
+  std::vector<REal> pointattributelist; /* In / out */
   std::vector<__int64> pointmarkerlist; /* In / out */
   int numberofpoints;                   /* In / out */
   int numberofpointattributes;          /* In / out */
 
   std::vector<__int64> trianglelist;       /* In / out */
-  std::vector<REAL> triangleattributelist; /* In / out */
-  std::vector<REAL> trianglearealist;      /* In only */
+  std::vector<REal> triangleattributelist; /* In / out */
+  std::vector<REal> trianglearealist;      /* In only */
   std::vector<__int64> neighborlist;       /* Out only */
   int numberoftriangles;                   /* In / out */
   int numberofcorners;                     /* In / out */
@@ -275,16 +275,16 @@ struct triangulateio {
   std::vector<__int64> segmentmarkerlist; /* In / out */
   int numberofsegments;                   /* In / out */
 
-  std::vector<REAL> holelist; /* In / pointer to array copied out */
+  std::vector<REal> holelist; /* In / pointer to array copied out */
   int numberofholes;          /* In / copied out */
 
-  std::vector<REAL> regionlist; /* In / pointer to array copied out */
+  std::vector<REal> regionlist; /* In / pointer to array copied out */
   int numberofregions;          /* In / copied out */
 
   std::vector<__int64> edgelist; /* Out only */
   std::vector<__int64>
       edgemarkerlist;         /* Not used with Voronoi diagram; out only */
-  std::vector<REAL> normlist; /* Used only with Voronoi diagram; out only */
+  std::vector<REal> normlist; /* Used only with Voronoi diagram; out only */
   int numberofedges;          /* Out only */
 };
 

@@ -33,7 +33,7 @@
 
 #include "aabvh.h"
 
-// #define REAL double
+// #define REal double
 
 #include "triangle.hh"
 

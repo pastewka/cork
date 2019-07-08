@@ -10,7 +10,7 @@
 #include "tetgen.hh"
 
 namespace corkpp {
-using point_t = std::array<REAL, 3>;
+using point_t = std::array<REal, 3>;
 using face_t = std::array<uint, 3>;
 // }
 void make_faces_from_nodes(const std::vector<point_t> &precipitate_vertices,

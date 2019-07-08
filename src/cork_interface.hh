@@ -70,14 +70,14 @@ enum class IntersectionState {
 
 struct VolNormStateIntersection {
   vector_t normal_vector;
-  REAL volume{0.0};
-  REAL volume_ratio{0.0};
+  REal volume{0.0};
+  REal volume_ratio{0.0};
   IntersectionState status{IntersectionState::intersecting};
 };
 
 struct VolStateIntersection {
-  REAL volume{0.0};
-  REAL volume_ratio{0.0};
+  REal volume{0.0};
+  REal volume_ratio{0.0};
   IntersectionState status{IntersectionState::intersecting};
 };
 
@@ -101,7 +101,7 @@ auto calculate_intersection_volume_state(
 
 auto calculate_intersection_normal(
     const std::vector<point_t> vertices_precipitate,
-    const std::vector<point_t> vertices_pixel) -> std::array<REAL, 3>;
+    const std::vector<point_t> vertices_pixel) -> std::array<REal, 3>;
 /**
  * This function recieves to set of vertices "vertices_pre" &
  * "vertices_precipitate" and it does:
@@ -113,7 +113,7 @@ auto calculate_intersection_normal(
 
 auto calculate_intersection_volume(
     const std::vector<point_t> vertices_precipitate,
-    const std::vector<point_t> vertices_pixel) -> REAL;
+    const std::vector<point_t> vertices_pixel) -> REal;
 
 /**
  * This function makes a corktirmesh list of nodes of a polyhedron
@@ -173,7 +173,7 @@ double volume_calculator(const CorkTriMesh &in);
  * belong to "in0" and does not belong to "in1"
  */
 void diff_of_faces(const CorkTriMesh &in0, const CorkTriMesh &in1,
-                   CorkTriMesh &out, REAL pixel_size = 1.0);
+                   CorkTriMesh &out, REal pixel_size = 1.0);
 
 /**
  * these function create a "out" CorkTrimesh consists of the facets that
@@ -181,7 +181,7 @@ void diff_of_faces(const CorkTriMesh &in0, const CorkTriMesh &in1,
  */
 void intersect_of_faces(const CorkTriMesh &in_diff,
                         const CorkTriMesh &in_intersect, CorkTriMesh &out,
-                        REAL pixel_size = 1.0);
+                        REal pixel_size = 1.0);
 /**
  * This function retruns a list of cube vertices given one of its corner's
  * coordinates and the vector connecting that to its farthest corner
@@ -209,7 +209,7 @@ void compute_intersection(const CorkTriMesh &in0, const CorkTriMesh &in1,
                           CorkTriMesh &out);
 
 void set_intersection_state(VolNormStateIntersection &intersection,
-                            REAL volume_precipitate);
+                            REal volume_precipitate);
 
 } // namespace corkpp
 
