@@ -49,7 +49,7 @@ using point_t = std::array<double, 3>;
 using vector_t = Eigen::Vector3d;
 using poly_t = Eigen::Matrix3Xd;
 constexpr double tolerance = 1e-4;
-constexpr double tolerance_ratio = 1e-5;
+constexpr double tolerance_ratio = 1e-4;
 
 /**
  * this functions can be used to write/read OFF (Object File Format) files
