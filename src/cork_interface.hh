@@ -93,11 +93,13 @@ struct VolStateIntersection {
 
 auto calculate_intersection_volume_normal_state(
     const std::vector<point_t> vertices_precipitate,
-    const std::vector<point_t> vertices_pixel) -> VolNormStateIntersection;
+    const std::vector<point_t> vertices_pixel, int dim = 3)
+    -> VolNormStateIntersection;
 
 auto calculate_intersection_volume_state(
     const std::vector<point_t> vertices_precipitate,
-    const std::vector<point_t> vertices_pixel) -> VolStateIntersection;
+    const std::vector<point_t> vertices_pixel, int dim = 3)
+    -> VolStateIntersection;
 
 auto calculate_intersection_normal(
     const std::vector<point_t> vertices_precipitate,
@@ -209,7 +211,7 @@ void compute_intersection(const CorkTriMesh &in0, const CorkTriMesh &in1,
                           CorkTriMesh &out);
 
 void set_intersection_state(VolNormStateIntersection &intersection,
-                            REal volume_precipitate);
+                            REal volume_precipitate, int dim = 3);
 
 } // namespace corkpp
 

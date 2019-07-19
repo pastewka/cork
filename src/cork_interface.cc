@@ -64,7 +64,7 @@ void saveMesh(string filename, CorkTriMesh in) {
 
 auto calculate_intersection_volume_normal_state(
     const std::vector<point_t> vertices_precipitate,
-    const std::vector<point_t> vertices_pixel) -> VolNormStateIntersection {
+    const std::vector<point_t> vertices_pixel, int dim) -> VolNormStateIntersection {
   std::vector<face_t> faces_precipitate, faces_pixel;
   VolNormStateIntersection ret_structure;
   make_faces_from_nodes(vertices_precipitate, faces_precipitate);
@@ -90,7 +90,7 @@ auto calculate_intersection_volume_normal_state(
   ret_structure.normal_vector =
       average_normal_calculator(intersection_and_difference);
   auto &&vol_precipitate = volume_calculator(precipitate);
-  set_intersection_state(ret_structure, vol_precipitate);
+  set_intersection_state(ret_structure, vol_precipitate, dim);
   return ret_structure;
 }
 
@@ -98,7 +98,7 @@ auto calculate_intersection_volume_normal_state(
 
 auto calculate_intersection_volume_state(
     const std::vector<point_t> vertices_precipitate,
-    const std::vector<point_t> vertices_pixel) -> VolStateIntersection {
+    const std::vector<point_t> vertices_pixel, int dim) -> VolStateIntersection {
   std::vector<face_t> faces_precipitate, faces_pixel;
   VolNormStateIntersection complete_structure;
   VolStateIntersection ret_structure;
@@ -126,7 +126,7 @@ auto calculate_intersection_volume_state(
   auto &&vol_precipitate = volume_calculator(precipitate);
   complete_structure.normal_vector =
       average_normal_calculator(intersection_and_difference);
-  set_intersection_state(complete_structure, vol_precipitate);
+  set_intersection_state(complete_structure, vol_precipitate, dim);
   ret_structure.status = complete_structure.status;
   return ret_structure;
 }
@@ -489,13 +489,13 @@ void compute_difference(const CorkTriMesh &in0, const CorkTriMesh &in1,
 /*-----------------------------------------------------------------------------*/
 
 void set_intersection_state(VolNormStateIntersection &intersection,
-                            REal vol_precipitate) {
+                            REal vol_precipitate, int dim) {
   if (intersection.volume_ratio < tolerance_ratio) {
     intersection.status = IntersectionState::non_intersecting;
   } else if (intersection.volume_ratio > 1 - tolerance_ratio) {
     intersection.status = IntersectionState::enclosing;
   } else {
-    if (intersection.normal_vector.norm() == 0.0) {
+    if (intersection.normal_vector.head(dim).norm() == 0.0) {
       intersection.status = IntersectionState::completely_inside;
     }
   }
