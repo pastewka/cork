@@ -64,7 +64,8 @@ void saveMesh(string filename, CorkTriMesh in) {
 
 auto calculate_intersection_volume_normal_state(
     const std::vector<point_t> vertices_precipitate,
-    const std::vector<point_t> vertices_pixel, int dim) -> VolNormStateIntersection {
+    const std::vector<point_t> vertices_pixel, int dim)
+    -> VolNormStateIntersection {
   std::vector<face_t> faces_precipitate, faces_pixel;
   VolNormStateIntersection ret_structure;
   make_faces_from_nodes(vertices_precipitate, faces_precipitate);
@@ -98,7 +99,8 @@ auto calculate_intersection_volume_normal_state(
 
 auto calculate_intersection_volume_state(
     const std::vector<point_t> vertices_precipitate,
-    const std::vector<point_t> vertices_pixel, int dim) -> VolStateIntersection {
+    const std::vector<point_t> vertices_pixel, int dim)
+    -> VolStateIntersection {
   std::vector<face_t> faces_precipitate, faces_pixel;
   VolNormStateIntersection complete_structure;
   VolStateIntersection ret_structure;
@@ -473,6 +475,20 @@ void compute_intersection(const CorkTriMesh &in0, const CorkTriMesh &in1,
     computeIntersection(in0, in1, out);
     state = checkState(out);
   } while (state == ResultState::non_solid);
+  if (state == ResultState::empty) {
+    do {
+      pseudoInitRand(iter++);
+      computeIntersection(in0, in1, out);
+      state = checkState(out);
+    } while (state == ResultState::non_solid);
+  }
+  if (state == ResultState::empty) {
+    do {
+      pseudoInitRand(iter++);
+      computeIntersection(in0, in1, out);
+      state = checkState(out);
+    } while (state == ResultState::non_solid);
+  }
 }
 
 /*-----------------------------------------------------------------------------*/
@@ -494,10 +510,8 @@ void set_intersection_state(VolNormStateIntersection &intersection,
     intersection.status = IntersectionState::non_intersecting;
   } else if (intersection.volume_ratio > 1 - tolerance_ratio) {
     intersection.status = IntersectionState::enclosing;
-  } else {
-    if (intersection.normal_vector.head(dim).norm() == 0.0) {
-      intersection.status = IntersectionState::completely_inside;
-    }
+  } else if (intersection.normal_vector.head(dim).norm() == 0.0) {
+    intersection.status = IntersectionState::completely_inside;
   }
 }
 /*-----------------------------------------------------------------------------*/
