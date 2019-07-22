@@ -482,13 +482,6 @@ void compute_intersection(const CorkTriMesh &in0, const CorkTriMesh &in1,
       state = checkState(out);
     } while (state == ResultState::non_solid);
   }
-  if (state == ResultState::empty) {
-    do {
-      pseudoInitRand(iter++);
-      computeIntersection(in0, in1, out);
-      state = checkState(out);
-    } while (state == ResultState::non_solid);
-  }
 }
 
 /*-----------------------------------------------------------------------------*/
