@@ -359,16 +359,19 @@ void diff_of_faces(const CorkTriMesh &in0, const CorkTriMesh &in1,
   vector_t normal0;
   normal0 << 0.0, 0.0, 0.0;
   point_t vertice{0.0, 0.0, 0.0};
-  std::vector<point_t> vertices0(in0.n_vertices, vertice);
 
+  std::vector<point_t> vertices0(in0.n_vertices, vertice);
   std::vector<point_t> vertices1(in1.n_vertices, vertice);
+
   std::vector<double> constants1(in1.n_triangles, 0.0);
   std::vector<vector_t> normals1(in1.n_triangles, normal0);
+
   double constant0;
   face_t face;
+
   std::vector<bool> new_face_checker(in0.n_triangles, true);
 
-  // here we calculate the normal and the constants of all facets of in1
+  // here we calculate the normal and the constants of all facets of in1 (pixel)
   for (uint i = 0; i < in1.n_vertices; ++i) {
     vertices1[i] = {in1.vertices[3 * i + 0], in1.vertices[3 * i + 1],
                     in1.vertices[3 * i + 2]};
@@ -379,9 +382,12 @@ void diff_of_faces(const CorkTriMesh &in0, const CorkTriMesh &in1,
     normals1[i] = face_normal_calculator(vertices1, face);
     constants1[i] = face_constant_calculator(vertices1, face, normals1[i]);
   }
+  //
+
   uint counter1 = 0;
-  // here we calculate the normal and the constants of all facets of in0 and
-  // loop over all of the facets of the in1 to check their similarity
+  // here we calculate the normal and the constants of all facets of in0
+  // (intersection) and loop over all of the facets of the in1 to check their
+  // similarity
   for (uint i = 0; i < in0.n_vertices; ++i) {
     vertices0[i] = {in0.vertices[3 * i + 0], in0.vertices[3 * i + 1],
                     in0.vertices[3 * i + 2]};
@@ -393,7 +399,10 @@ void diff_of_faces(const CorkTriMesh &in0, const CorkTriMesh &in1,
     normal0 = face_normal_calculator(vertices0, face);
     constant0 = face_constant_calculator(vertices0, face, normal0);
     for (uint j = 0; j < in1.n_triangles; ++j) {
-      if (std::abs(constants1[j] - constant0) < tolerance) {
+      if ((std::abs(constant0) + std::abs(constants1[j])) == 0 or
+          std::abs(2 * (constants1[j] - constant0) /
+                   (std::abs(constant0) + std::abs(constants1[j]))) <
+              tolerance) {
         for (uint k = 0; k < 3; ++k) {
           if (std::abs(normals1[j][k] - normal0[k]) < tolerance) {
             counter1++;
