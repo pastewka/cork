@@ -57,44 +57,30 @@ std::vector<double> linspace(T start_in, T end_in, int num_in) {
 
 int main(int argc, char *argv[]) {
   REal Pi = M_PI;
-  corkpp::point_t center({9.5, 9.5, 0.0});
-  std::vector<REal> theta = linspace(0.0, 2 * Pi, 50);
+  corkpp::point_t center({70.5, 70.5, 0.0});
+  std::vector<REal> theta = linspace(0.0, 2 * Pi, 100);
   REal vertices_precipitate_x;
   REal vertices_precipitate_y;
-  REal radius{4.75};
+  REal radius{35.25};
   std::vector<corkpp::point_t> vertices_precipitate;
   for (int i = 0; i < theta.size() - 1; ++i) {
     vertices_precipitate_x = center[0] + radius * cos(theta[i]);
     vertices_precipitate_y = center[1] + radius * sin(theta[i]);
     vertices_precipitate.push_back(
         {vertices_precipitate_x, vertices_precipitate_y, 0.0});
-    // vertices_precipitate.push_back(
-    //     {vertices_precipitate_x, vertices_precipitate_y, 1.0});
   }
 
   for (int i = 0; i < theta.size() - 1; ++i) {
     vertices_precipitate_x = center[0] + radius * cos(theta[i]);
     vertices_precipitate_y = center[1] + radius * sin(theta[i]);
-    // vertices_precipitate.push_back(
-    //     {vertices_precipitate_x, vertices_precipitate_y, 0.0});
     vertices_precipitate.push_back(
         {vertices_precipitate_x, vertices_precipitate_y, 1.0});
   }
 
-  // corkpp::point_t origin_precipitate{-0.50, -0.50, -0.50};
-  // corkpp::point_t size_precipitate{2.0, 2.30, 2.00};
-  // vertices_precipitate =
-  //     corkpp::cube_vertice_maker(origin_precipitate, size_precipitate);
-
-  // vertices_precipitate.push_back({0.05, 0.05, 0.05});
-  // vertices_precipitate.push_back({0.50, 0.05, 0.05});
-  // vertices_precipitate.push_back({0.05, 0.50, 0.05});
-  // vertices_precipitate.push_back({0.05, 0.05, 0.50});
-  // vertices_precipitate.push_back({0.50, 0.50, 0.50});
-
   std::vector<corkpp::point_t> vertices_pixel;
-  corkpp::point_t origin_pixel{8.0, 8.0, 0.0};
-  corkpp::point_t size_pixel{4.0, 4.0, 1.00};
+  corkpp::point_t origin_pixel{45.0, 45.0, 0.0};
+  corkpp::point_t size_pixel{1.0, 1.0, 1.00};
+
   vertices_pixel = corkpp::cube_vertice_maker(origin_pixel, size_pixel);
   for (auto &&pixel_point : vertices_precipitate) {
     std::cout << pixel_point[0] << ", " << pixel_point[1] << ", "

@@ -399,7 +399,7 @@ void diff_of_faces(const CorkTriMesh &in0, const CorkTriMesh &in1,
     normal0 = face_normal_calculator(vertices0, face);
     constant0 = face_constant_calculator(vertices0, face, normal0);
     for (uint j = 0; j < in1.n_triangles; ++j) {
-      if ((std::abs(constant0) + std::abs(constants1[j])) == 0 or
+      if ((std::abs(constant0) + std::abs(constants1[j])) < tolerance or
           std::abs(2 * (constants1[j] - constant0) /
                    (std::abs(constant0) + std::abs(constants1[j]))) <
               tolerance) {
