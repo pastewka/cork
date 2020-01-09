@@ -29,6 +29,7 @@
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Dense>
 #include <iostream>
+#include <memory>
 using std::cerr;
 using std::cout;
 using std::endl;
@@ -36,6 +37,7 @@ using std::endl;
 using std::ostream;
 using std::string;
 using std::stringstream;
+
 
 #ifndef CORK_INTERFACE_HH
 #define CORK_INTERFACE_HH
@@ -69,7 +71,12 @@ enum class IntersectionState {
 };
 
 struct VolNormStateIntersection {
-  vector_t normal_vector;
+
+  VolNormStateIntersection()
+    :normal_vector_holder{std::make_unique<vector_t>(vector_t::Zero())},
+     normal_vector{*this->normal_vector_holder}{};
+  std::unique_ptr<vector_t> normal_vector_holder;
+  vector_t& normal_vector;
   REal volume{0.0};
   REal volume_ratio{0.0};
   IntersectionState status{IntersectionState::intersecting};
