@@ -26,8 +26,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <eigen3/Eigen/Core>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Core>
+#include <Eigen/Dense>
 #include <iostream>
 #include <memory>
 using std::cerr;
