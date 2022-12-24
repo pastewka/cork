@@ -4,9 +4,10 @@ cmake_minimum_required (VERSION 3.1)
 
 set (CMAKE_CXX_STANDARD 14)
 
-# set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ./cmake)
-# include(muspectreTools)
-# add_external_package(gmp)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+include(muspectreTools)
+add_external_package(Eigen3 VERSION 3.3.0 CONFIG)
+add_external_package(gmp)
 
 if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")

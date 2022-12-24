@@ -61,8 +61,7 @@ add_library(corkpp STATIC ${cork_SRC})
 
 
 #link tetgen 
-target_link_libraries(corkpp PUBLIC gmp)
-target_link_libraries(corkpp PUBLIC tetgen)
+target_link_libraries(corkpp PUBLIC Eigen3::Eigen gmp tetgen)
 
 #install public facing headers and lib
 # install (TARGETS cork64 DESTINATION ${PROJECT_SOURCE_DIR}/lib)
